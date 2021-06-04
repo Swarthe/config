@@ -90,6 +90,11 @@ set scrolloff=5
 set ignorecase
 set smartcase
 
+" Convert tabs into  4 spaces.
+set tabstop=4
+set shiftwidth=4
+set expandtab
+
 " Do incremental searching when it's possible to timeout.
 if has('reltime')
   set incsearch
