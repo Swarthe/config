@@ -1,2 +1,4 @@
 # dotfiles
-Good enough for me (Arch Linux)
+
+- Includes configuration for my most heavily customised applications
+- Do whatever you want with this
