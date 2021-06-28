@@ -1,7 +1,8 @@
 # This file contains fish universal variable definitions.
 # VERSION: 3.0
-SETUVAR --export EDITOR:vim
+SETUVAR --export BROWSER:firefox
 SETUVAR --export PAGER:less
+SETUVAR --export EDITOR:vim
 SETUVAR --export VIMINIT:source ~/.config/vim/vimrc
 SETUVAR __fish_initialized:3100
 SETUVAR fish_color_autosuggestion:767676

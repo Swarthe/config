@@ -1,5 +1,5 @@
 configuration {
-modi: "combi,window,drun,run,file-browser-extended";
+modi: "combi,window,drun,run,file-browser-extended,clipboard:greenclip print";
 /*	width: 50;*/
 /*	lines: 15;*/
 /*	columns: 1;*/
@@ -22,7 +22,7 @@ show-icons: true;
 icon-theme: "Papirus-Dark";
 /*	drun-match-fields: "name,generic,exec,categories,keywords";*/
 /*	drun-categories: true;*/
-/*      drun-show-actions: false;*/
+/*  drun-show-actions: false;*/
 /*	drun-display-format: "{name} [<span weight='light' size='small'><i>({generic})</i></span>]";*/
 /*	drun-url-launcher: "xdg-open";*/
 /*	disable-history: false;*/
@@ -36,7 +36,7 @@ icon-theme: "Papirus-Dark";
 /*	auto-select: false;*/
 /*	parse-hosts: false;*/
 /*	parse-known-hosts: true;*/
-combi-modi: "window,drun,run,file-browser-extended";
+combi-modi: "drun,run,file-browser-extended";
 display-file-browser-extended: "file";
 /*	matching: "normal";*/
 /*	tokenize: true;*/
@@ -64,7 +64,7 @@ theme:"Arc-Dark" ;
 /*	max-history-size: 25;*/
 /*	combi-hide-mode-prefix: false;*/
 /*	matching-negate-char: '-' /* unsupported */;*/
-/*	cache-dir: ;*/
+cache-dir: "/home/overbeck/.local/share/rofi/"; 
 /*	window-thumbnail: false;*/
 /*	drun-use-desktop-cache: false;*/
 /*	drun-reload-desktop-cache: false;*/
