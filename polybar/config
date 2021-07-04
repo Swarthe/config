@@ -19,7 +19,7 @@
 [colors]
 ;background = ${xrdb:color0:#222}
 background = #3321342c
-background-alt = #444
+background-alt = #404552
 ;foreground = ${xrdb:color7:#222}
 foreground = #dfdfdf
 foreground-alt = #fff
@@ -48,8 +48,8 @@ border-color = #00000000
 padding-left = 0
 padding-right = 0
 
-module-margin-left = 2
-module-margin-right = 2
+module-margin-left = 3
+module-margin-right = 3
 
 font-0 = NotoSans:size=10;1
 font-1 = FontAwesome5Free:style=Solid:size=10;1
@@ -59,8 +59,8 @@ font-4 = FontAwesome5Free:style=Solid:size=12;4
 font-5 = NotoSans:size=10;2
 
 modules-left = i3 xwindow
-modules-center = now-playing 
-modules-right = update-status update-status_ipc mic-usage memory cpu temperature date power-menu
+modules-center = media 
+modules-right = update update-refresh update-ipc microphone memory cpu temperature date power-menu
 
 enable-ipc = true
 
@@ -83,9 +83,9 @@ tray-padding = 0
 cursor-click = pointer
 cursor-scroll = ns-resize
 
-[module/now-playing]
+[module/media]
 type = custom/script
-exec = /home/overbeck/document/project/software/sh/script/status/now-playing.sh
+exec = /home/overbeck/document/project/software/sh/script/status/media.sh
 interval = 0.1
 
 click-left = playerctl play-pause
@@ -94,27 +94,29 @@ click-middle = playerctl -a play-pause
 scroll-down = playerctl next
 scroll-up = playerctl previous
 
-[module/update-status]
+[module/update]
 type = custom/script
-exec = polybar-msg hook update-status_ipc 1
+exec = polybar-msg hook update-ipc 1 
 interval = 1800
 label =
 
-[module/update-status_ipc]
-; updates update-status on click
-type = custom/ipc
-hook-0 = /home/overbeck/document/project/software/sh/script/status/update-status.sh
+[module/update-refresh]
+type = custom/script
+exec = /home/overbeck/document/project/software/sh/script/status/update.sh -r
+label =
 
-click-left = polybar-msg hook update-status_ipc 1
+[module/update-ipc]
+type = custom/ipc
+hook-0 = /home/overbeck/document/project/software/sh/script/status/update.sh
 
 format-underline = #cc00aa
 
-[module/mic-usage]
+[module/microphone]
 type = custom/script
-exec = /home/overbeck/document/project/software/sh/script/status/mic-usage.sh
+exec = /home/overbeck/document/project/software/sh/script/status/microphone.sh
 interval = 2
 
-format-underline = #d0ff00
+format-underline = #debe00
 
 [module/xwindow]
 type = internal/xwindow
@@ -168,7 +170,7 @@ label-mode-background = ${colors.primary}
 ; focused = Active workspace on focused monitor
 label-focused = %index%
 label-focused-background = ${colors.background-alt}
-label-focused-underline= ${colors.primary}
+label-focused-underline = ${colors.primary}
 label-focused-padding = 2
 
 ; unfocused = Inactive workspace on any monitor
@@ -255,7 +257,7 @@ date-alt = " %A, %d %B"
 
 format-prefix = 
 format-prefix-foreground = ${colors.foreground-alt}
-format-underline = #ffcc22
+format-underline = #ff7722
 
 label = %date%%time%
 
@@ -343,7 +345,7 @@ format-spacing = 1
 
 label-open = "%{T5} %{T-}"
 label-open-foreground = ${colors.primary}
-label-close = "%{T5} %{T-}"
+label-close = "%{T5} %{T-}"
 label-close-foreground = ${colors.primary}
 label-separator = "%{T6}|%{T-}"
 label-separator-foreground = ${colors.foreground-alt}
