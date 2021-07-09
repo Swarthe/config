@@ -19,10 +19,10 @@ set tabstop=4
 set shiftwidth=4
 set expandtab
 
-" Configure statusline
+" Configure statusline (airline)
 let g:airline_theme='onedark'
-"hi StatusLine ctermbg=NONE cterm=bold
 "let g:airline_powerline_fonts = 1
+"hi StatusLine ctermbg=NONE cterm=bold
 
 " Use X clipboard.
 set clipboard=unnamedplus

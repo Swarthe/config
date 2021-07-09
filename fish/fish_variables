@@ -1,9 +1,21 @@
 # This file contains fish universal variable definitions.
 # VERSION: 3.0
+SETUVAR --export XDG_CONFIG_HOME:/home/overbeck/.config
+SETUVAR --export XDG_DATA_HOME:/home/overbeck/.local/share
+SETUVAR --export XDG_CACHE_HOME:/home/overbeck/.cache
+
+SETUVAR --export GNUPGHOME:/home/overbeck/.config/gnupg
+SETUVAR --export LESSHISTFILE:/home/overbeck/.local/share/less/less.hist
+SETUVAR --export GTK2_RC_FILES:/home/overbeck/.config/gtk-2.0/gtkrc
+
+SETUVAR --export BACKUP_TARGET:/home/overbeck/transient/test
+SETUVAR --export SCOT_TARGET:/home/overbeck/transient/
+
 SETUVAR --export BROWSER:firefox
 SETUVAR --export PAGER:less
 SETUVAR --export EDITOR:nvim
 SETUVAR --export DIFFPROG:nvim -d
+
 SETUVAR __fish_initialized:3100
 SETUVAR fish_color_autosuggestion:767676
 SETUVAR fish_color_cancel:normal

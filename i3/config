@@ -37,12 +37,10 @@ i3lock --nofork --indicator --clock --centered --pass-{media,power}-keys \
 exec_always --no-startup-id feh --no-fehbg --recursive --bg-fill --randomize \
 /home/overbeck/image/saved/theme/background/
 
-# Manually and automatically lock the screen + sleep
+# automatically lock the screen + sleep
 exec_always --no-startup-id killall -q xidlehook; xidlehook \
 --detect-sleep --not-when-audio \
 --timer 300 "loginctl lock-session" "" --timer 1500 "systemctl suspend" ""
-
-bindsym $mod+o exec --no-startup-id "loginctl lock-session"
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
@@ -82,6 +80,12 @@ bindsym $mod+Return exec --no-startup-id i3-sensible-terminal
 
 # start a browser
 bindsym $mod+apostrophe exec firefox
+
+# take a screenshot
+bindsym $mod+s --release exec --no-startup-id scot -g
+bindsym $mod+Shift+s exec --no-startup-id scot -dg
+bindsym $mod+$sup+s --release exec --no-startup-id scot -fg
+bindsym $mod+$sup+Shift+s exec --no-startup-id scot -dgf
 
 # start dmenu (a program launcher)
 # bindsym $mod+d exec --no-startup-id dmenu_run
@@ -132,9 +136,9 @@ bindsym $mod+v split v
 bindsym $mod+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
-bindsym $mod+s layout stacking
-bindsym $mod+w layout tabbed
-bindsym $mod+e layout toggle split
+bindsym $mod+t layout stacking
+bindsym $mod+y layout tabbed
+bindsym $mod+u layout toggle split
 
 # toggle tiling / floating
 bindsym $mod+Shift+space floating toggle
@@ -200,6 +204,8 @@ bindsym $mod+Shift+r restart
 bindsym $mod+Shift+e exec --no-startup-id "i3-nagbar -t warning \
 -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' \
 -B 'Yes, exit i3' 'i3-msg exit'"
+# lock the screen
+bindsym $mod+e exec --no-startup-id "loginctl lock-session"
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -243,7 +249,7 @@ gaps outer 0
 # smart_borders on
 
 # Autostart programs
-exec_always --no-startup-id killall -q polybar; polybar bar
+exec --no-startup-id polybar bar
 exec_always --no-startup-id killall -q autotiling; autotiling
 exec_always --no-startup-id killall -q picom; picom 
 exec_always --no-startup-id killall -q greenclip; greenclip daemon 

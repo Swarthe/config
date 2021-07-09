@@ -48,19 +48,20 @@ border-color = #00000000
 padding-left = 0
 padding-right = 0
 
-module-margin-left = 3
-module-margin-right = 3
+module-margin-left = 4
+module-margin-right = 4
 
 font-0 = NotoSans:size=10;1
 font-1 = FontAwesome5Free:style=Solid:size=10;1
 font-2 = FontAwesome5Free:style=Regular:size=10;1
 font-3 = FontAwesome5Brands:style=Regular:size=10;1
 font-4 = FontAwesome5Free:style=Solid:size=12;4
-font-5 = NotoSans:size=10;2
+font-5 = FontAwesome5Free:style=Solid:size=10;3
+font-6 = NotoSans:size=12;2
 
 modules-left = i3 xwindow
 modules-center = media 
-modules-right = update update-refresh update-ipc microphone memory cpu temperature date power-menu
+modules-right = update update-refresh update-ipc microphone network memory cpu temperature date power-menu
 
 enable-ipc = true
 
@@ -70,7 +71,7 @@ tray-position = right
 tray-padding = 0
 
 ;wm-restack = bspwm
-;wm-restack = i3
+wm-restack = i3
 
 ;override-redirect = true
 
@@ -121,7 +122,7 @@ format-underline = #debe00
 [module/xwindow]
 type = internal/xwindow
 label = %title%
-label-maxlen = 50
+label-maxlen = 75
 
 format-underline = #2baa4a
 
@@ -206,6 +207,17 @@ format-prefix = " "
 format-prefix-foreground = ${colors.foreground-alt}
 format-underline = #4bffdc
 label = %percentage_used%% %gb_used%
+
+[module/network]
+type = internal/network
+interface = wlan0
+interval = 2
+
+label-connected = " %downspeed%   %upspeed%"
+label-disconnected = "%{F#e60053}%{F-} Disconnected"
+
+format-connected-underline = #9c7eb8
+format-disconnected-underline = #9c7eb8
 
 ;[module/wlan]
 ;type = internal/network
@@ -347,14 +359,14 @@ label-open = "%{T5} %{T-}"
 label-open-foreground = ${colors.primary}
 label-close = "%{T5} %{T-}"
 label-close-foreground = ${colors.primary}
-label-separator = "%{T6}|%{T-}"
+label-separator = "%{T6} %{T-}"
 label-separator-foreground = ${colors.foreground-alt}
 
-menu-0-0 = "%{T6}Suspend%{T-}"
+menu-0-0 = "%{T6}%{T-}"
 menu-0-0-exec = systemctl suspend
-menu-0-1 = "%{T6}Reboot%{T-}"
+menu-0-1 = "%{T6}%{T-}"
 menu-0-1-exec = systemctl reboot
-menu-0-2 = "%{T6}Poweroff%{T-}"
+menu-0-2 = "%{T6}%{T-}%{T7}   |%{T-}"
 menu-0-2-exec = systemctl poweroff
 
 

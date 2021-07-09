@@ -1,4 +1,4 @@
-dir "/home/overbeck/"
+dir "~"
 icon-them "Papirus-Dark"
 depth 6
 no-descend
