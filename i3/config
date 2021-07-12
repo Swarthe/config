@@ -255,4 +255,4 @@ exec_always --no-startup-id killall -q picom; picom
 exec_always --no-startup-id killall -q greenclip; greenclip daemon 
 exec_always --no-startup-id killall -q playerctld; playerctld daemon
 exec_always --no-startup-id killall -q dunst; dunst
-exec_always --no-startup-id killall -q pulseeffects; pulseeffects --gapplication-service
+exec_always --no-startup-id killall -q easyeffects; easyeffects --gapplication-service
