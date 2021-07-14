@@ -1,9 +1,9 @@
 configuration {
-modi: "combi,window,drun,file-browser-extended,clipboard:greenclip print";
+modi: "combi,window,drun,file-browser-extended,clipboard:greenclip print,query:tuxi -rq";
 /*	width: 50;*/
 /*	lines: 15;*/
 /*	columns: 1;*/
-/*	font: "mono 12";*/
+font: "Noto Sans 12";
 /*	bw: 1;*/
 /*	location: 0;*/
 /*	padding: 5;*/
@@ -38,6 +38,7 @@ icon-theme: "Papirus-Dark";
 /*	parse-known-hosts: true;*/
 combi-modi: "drun,file-browser-extended";
 display-file-browser-extended: "file";
+display-combi: "open";
 /*	matching: "normal";*/
 /*	tokenize: true;*/
 /*	m: "-5";*/
@@ -56,7 +57,7 @@ display-file-browser-extended: "file";
 /*	window-format: "{w}    {c}   {t}";*/
 /*	click-to-exit: true;*/
 /*	show-match: true;*/
-theme:"Arc-Dark" ;
+theme:"Arc-Dark-custom" ;
 /*	color-normal: ;*/
 /*	color-urgent: ;*/
 /*	color-active: ;*/

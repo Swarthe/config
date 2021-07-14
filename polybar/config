@@ -86,7 +86,7 @@ cursor-scroll = ns-resize
 
 [module/media]
 type = custom/script
-exec = /home/overbeck/document/project/software/sh/script/status/media.sh
+exec = /home/overbeck/.config/polybar/script/media.sh
 interval = 0.1
 
 click-left = playerctl play-pause
@@ -103,18 +103,18 @@ label =
 
 [module/update-refresh]
 type = custom/script
-exec = /home/overbeck/document/project/software/sh/script/status/update.sh -r
+exec = /home/overbeck/.config/polybar/script/update.sh -r
 label =
 
 [module/update-ipc]
 type = custom/ipc
-hook-0 = /home/overbeck/document/project/software/sh/script/status/update.sh
+hook-0 = /home/overbeck/.config/polybar/script/update.sh
 
 format-underline = #cc00aa
 
 [module/microphone]
 type = custom/script
-exec = /home/overbeck/document/project/software/sh/script/status/microphone.sh
+exec = /home/overbeck/.config/polybar/script/microphone.sh
 interval = 2
 
 format-underline = #debe00
