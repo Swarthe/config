@@ -4,7 +4,7 @@
 #
 
 if ! grep "owner_pid" /proc/asound/card2/pcm0c/sub0/status &> /dev/null; then
-    echo ""
+    echo
 else
     echo -e "%{F#e60053}%{F-}"
 fi

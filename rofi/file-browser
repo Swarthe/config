@@ -1,5 +1,5 @@
 dir "~"
 icon-them "Papirus-Dark"
-depth 6
-no-descend
+depth 5
 follow-symlinks
+sort-by-depth

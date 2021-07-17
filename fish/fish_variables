@@ -1,18 +1,23 @@
 # This file contains fish universal variable definitions.
 # VERSION: 3.0
+
+# Set user directories
 SETUVAR --export XDG_CONFIG_HOME:/home/overbeck/.config
 SETUVAR --export XDG_DATA_HOME:/home/overbeck/.local/share
 SETUVAR --export XDG_CACHE_HOME:/home/overbeck/.cache
 
+# Use XDG locations
 SETUVAR --export GNUPGHOME:/home/overbeck/.config/gnupg
 SETUVAR --export LESSHISTFILE:/home/overbeck/.local/share/less/less.hist
 SETUVAR --export GTK2_RC_FILES:/home/overbeck/.config/gtk-2.0/gtkrc
 SETUVAR --export PARALLEL_HOME:/home/overbeck/.config/parallel
 
+# Application configuration
 SETUVAR --export GTK_THEME:Arc-Dark
 SETUVAR --export BACKUP_TARGET:/home/overbeck/transient/test
 SETUVAR --export SCOT_TARGET:/home/overbeck/transient/
 
+# Default applications
 SETUVAR --export BROWSER:firefox
 SETUVAR --export PAGER:less
 SETUVAR --export EDITOR:nvim

@@ -36,9 +36,9 @@ icon-theme: "Papirus-Dark";
 /*	auto-select: false;*/
 /*	parse-hosts: false;*/
 /*	parse-known-hosts: true;*/
-combi-modi: "drun,file-browser-extended";
-display-file-browser-extended: "file";
-display-combi: "open";
+/*  combi-modi: "drun,file-browser-extended";*/
+display-file-browser-extended: "open";
+display-drun: "run";
 /*	matching: "normal";*/
 /*	tokenize: true;*/
 /*	m: "-5";*/

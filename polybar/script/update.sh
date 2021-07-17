@@ -19,7 +19,7 @@ updates_repo=$(checkupdates | wc -l)
 updates_aur=$(yay -Qum | wc -l)
 
 if [ $(($updates_repo + $updates_aur)) -eq 0 ]; then
-    echo " "
+    echo
 else
     echo "%{F#e60053}%{F-} $updates_repo | $updates_aur"
 fi
