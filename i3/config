@@ -27,11 +27,13 @@ exec --no-startup-id xset s noblank
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
 exec_always --no-startup-id killall -q xss-lock; xss-lock --transfer-sleep-lock -- \
-i3lock --nofork --indicator --clock --centered --pass-{media,power}-keys \
---greeter-text="$USER" --time-str='%H:%M' --date-str='%A, %d %B' \
+i3lock --nofork --indicator --clock --fill --pass-{media,power}-keys \
+--greeter-text="$USER" --time-str='%H:%M' --date-str='%a, %d %b' \
 --verif-text="Verifying..." --wrong-text="Incorrect!" --noinput-text="No Input" \
---{date,time,greeter}-color=ffffffff --ring-width 5 --color=00000000 \
---image=$(find image/saved/theme/background/spatial/ -type f | shuf -n 1) 
+--{date,time,greeter}-color=ffeeeeee --ring-width 5 --color=00000000 \
+--image=$(find image/saved/theme/background/spatial/ -type f | shuf -n 1) \
+--ring-color=2062b0 --ringver-color=009900 --keyhl-color=63a5f3 \
+--insidever-color=009900ff
 
 # set background with feh
 exec_always --no-startup-id feh --no-fehbg --recursive --bg-fill --randomize \
@@ -78,40 +80,69 @@ floating_modifier $mod
 # start a terminal
 bindsym $mod+Return exec --no-startup-id i3-sensible-terminal
 
-# run graphical applications not designed for file operations (use rofi or
-# terminal for that)
-mode "run" {
-        # These bindings trigger as soon as you enter the launch mode
-        bindsym f exec                        firefox;            mode "default"  
-        bindsym d exec --no-startup-id        discord;            mode "default"  
-        bindsym e exec                        easyeffects;        mode "default"  
-        bindsym s exec --no-startup-id        steam;              mode "default"  
-        bindsym p exec                        pavucontrol;        mode "default"  
-        bindsym t exec                        tor-browser;        mode "default"  
+# Launch standalone graphical applications not designed for file operations (use
+# rofi or terminal for that)
+mode "Launch" {
+    # These bindings trigger as soon as you enter the launch mode
+    bindsym f exec                    firefox;        mode "default"
+    bindsym d exec --no-startup-id    discord;        mode "default"
+    bindsym e exec                    easyeffects;    mode "default"
+    bindsym s exec --no-startup-id    steam;          mode "default"
+    bindsym p exec                    pavucontrol;    mode "default"
+    bindsym t exec                    tor-browser;    mode "default"
+    bindsym b exec                    baobab;         mode "default"
 
-        # back to normal: Enter or Escape or $mod+apostrophe
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
-        bindsym $mod+apostrophe mode "default"
+    # back to normal: Enter or Escape or $mod+apostrophe
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $mod+apostrophe mode "default"
 }
 
-bindsym $mod+apostrophe mode "run"
+bindsym $mod+apostrophe mode "Launch"
 
-# quit or suspend the session
-mode "quit" {
-        # These bindings trigger as soon as you enter the launch mode
-        bindsym p exec --no-startup-id        systemctl poweroff;         mode "default"  
-        bindsym s exec --no-startup-id        systemctl suspend;          mode "default"  
-        bindsym h exec --no-startup-id        systemctl hibernate;        mode "default"  
-        bindsym r exec --no-startup-id        systemctl reboot;           mode "default"  
+# Quit or suspend the session
+mode "Quit" {
+    # These bindings trigger as soon as you enter the launch mode
+    bindsym p exec --no-startup-id    systemctl poweroff;     mode "default"
+    bindsym s exec --no-startup-id    systemctl suspend;      mode "default"
+    bindsym h exec --no-startup-id    systemctl hibernate;    mode "default"
+    bindsym r exec --no-startup-id    systemctl reboot;       mode "default"
 
-        # back to normal: Enter or Escape or $mod+q
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
-        bindsym $mod+q mode "default"
+    # back to normal: Enter or Escape or $mod+q
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $mod+q mode "default"
 }
 
-bindsym $mod+q mode "quit"
+bindsym $mod+q mode "Quit"
+
+# Resize window (you can also use the mouse for that)
+mode "Resize" {
+    # These bindings trigger as soon as you enter the resize mode
+
+    # Pressing left will shrink the window’s width.
+    # Pressing right will grow the window’s width.
+    # Pressing up will shrink the window’s height.
+    # Pressing down will grow the window’s height.
+    bindsym $left     resize shrink width 10 px or 10 ppt
+    bindsym $down     resize grow height 10 px or 10 ppt
+    bindsym $up       resize shrink height 10 px or 10 ppt
+    bindsym $right    resize grow width 10 px or 10 ppt
+
+    # same bindings, but for the arrow keys
+    bindsym Left     resize shrink width 10 px or 10 ppt
+    bindsym Down     resize grow height 10 px or 10 ppt
+    bindsym Up       resize shrink height 10 px or 10 ppt
+    bindsym Right    resize grow width 10 px or 10 ppt
+
+    # back to normal: Enter or Escape or $mod+r
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $mod+r mode "default"
+}
+
+bindsym $mod+r mode "Resize"
+
 
 # take a screenshot
 bindsym $mod+s --release exec --no-startup-id scot -g
@@ -119,15 +150,15 @@ bindsym $mod+Shift+s exec --no-startup-id scot -dg
 bindsym $mod+$sup+s --release exec --no-startup-id scot -fg
 bindsym $mod+$sup+Shift+s exec --no-startup-id scot -dgf
 
-# run graphical applications with rofi:
+# Run graphical applications with rofi
 bindsym $sup+r exec --no-startup-id rofi -show drun
-# open files directly with rofi:
+# Open files directly with rofi and file-browser-extended:
 bindsym $sup+space exec --no-startup-id rofi -lines 14 -show file-browser-extended
 # Window switcher with rofi
 bindsym $sup+Tab exec --no-startup-id rofi -show window
 # Clipboard with rofi and greenclip
 bindsym $sup+c exec --no-startup-id rofi -show clipboard
-# Query the internet with rofi and tuxi
+# Query the internet with tweaked rofi and tuxi
 bindsym $sup+q exec --no-startup-id "rofi -lines 16 \
 -theme-str \\"* { selected-normal-background: @background; }\\" \
 -theme-str \\"* { selected-normal-foreground: @foreground; }\\" \
@@ -164,7 +195,6 @@ bindsym $mod+Shift+Right move right
 
 # split in horizontal orientation
 bindsym $mod+b split h
-
 # split in vertical orientation
 bindsym $mod+v split v
 
@@ -172,31 +202,28 @@ bindsym $mod+v split v
 bindsym $mod+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
-bindsym $mod+t layout stacking
-bindsym $mod+y layout tabbed
-bindsym $mod+u layout toggle split
+#bindsym $mod+t layout stacking
+#bindsym $mod+y layout tabbed
+#bindsym $mod+u layout toggle split
 
 # toggle tiling / floating
 bindsym $mod+Shift+space floating toggle
-
 # change focus between tiling / floating windows
 bindsym $mod+space focus mode_toggle
 
 # focus the parent container
 #bindsym $mod+a focus parent
-
 # focus the child container
 #bindsym $mod+d focus child
 
-# move (disappear) the currently focused window to the scratchpad
+# move (Disappear) the currently focused window to the scratchpad
 bindsym $mod+Shift+d move scratchpad
-
-# Show the next scratchpad window or hide (disappear) the focused scratchpad window.
-# If there are multiple scratchpad windows, this command cycles through them.
+# Show the next scratchpad window or hide (Disappear) the focused scratchpad
+# window. If there are multiple scratchpad windows, this command cycles through them.
 bindsym $mod+d scratchpad show
 
-# Define names for default workspaces for which we configure key bindings later on.
-# We use variables to avoid repeating the names in multiple places.
+# Define names for default workspaces for which we configure key bindings later
+# on. We use variables to avoid repeating the names in multiple places.
 set $ws1 "1"
 set $ws2 "2"
 set $ws3 "3"
@@ -240,35 +267,8 @@ bindsym $mod+Shift+r restart
 bindsym $mod+Shift+e exec --no-startup-id "i3-nagbar -t warning \
 -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' \
 -B 'Yes, exit i3' 'i3-msg exit'"
-# lock (exit) the display
+# lock (Exit) the display
 bindsym $mod+e exec --no-startup-id "loginctl lock-session"
-
-# resize window (you can also use the mouse for that)
-mode "resize" {
-        # These bindings trigger as soon as you enter the resize mode
-
-        # Pressing left will shrink the window’s width.
-        # Pressing right will grow the window’s width.
-        # Pressing up will shrink the window’s height.
-        # Pressing down will grow the window’s height.
-        bindsym $left       resize shrink width 10 px or 10 ppt
-        bindsym $down       resize grow height 10 px or 10 ppt
-        bindsym $up         resize shrink height 10 px or 10 ppt
-        bindsym $right      resize grow width 10 px or 10 ppt
-
-        # same bindings, but for the arrow keys
-        bindsym Left        resize shrink width 10 px or 10 ppt
-        bindsym Down        resize grow height 10 px or 10 ppt
-        bindsym Up          resize shrink height 10 px or 10 ppt
-        bindsym Right       resize grow width 10 px or 10 ppt
-
-        # back to normal: Enter or Escape or $mod+r
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
-        bindsym $mod+r mode "default"
-}
-
-bindsym $mod+r mode "resize"
 
 # Disable window titlebars and borders entirely
 for_window [class="^.*"] border pixel 0
@@ -280,15 +280,16 @@ gaps outer 0
 # Smart gaps (gaps used if only more than one container on the workspace)
 # smart_gaps on
 
-# Smart borders (draw borders around container only if it is not the only container on this workspace)
-# on|no_gaps (on=always activate and no_gaps=only activate if the gap size to the edge of the screen is 0)
+# Smart borders (draw borders around container only if it is not the only
+# container on this workspace) on|no_gaps (on=always activate and no_gaps=only
+# activate if the gap size to the edge of the screen is 0)
 # smart_borders on
 
 # Autostart programs
-exec --no-startup-id polybar bar
+exec --no-startup-id polybar main
 exec_always --no-startup-id killall -q autotiling; autotiling
 exec_always --no-startup-id killall -q picom; picom
-exec_always --no-startup-id killall -q greenclip; greenclip daemon 
+exec_always --no-startup-id killall -q greenclip; greenclip daemon
 exec_always --no-startup-id killall -q playerctld; playerctld daemon
 exec_always --no-startup-id killall -q dunst; dunst
 exec_always --no-startup-id killall -q easyeffects; easyeffects --gapplication-service

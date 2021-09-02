@@ -65,7 +65,7 @@ theme:"Arc-Dark-custom" ;
 /*	max-history-size: 25;*/
 /*	combi-hide-mode-prefix: false;*/
 /*	matching-negate-char: '-' /* unsupported */;*/
-cache-dir: "/home/overbeck/.local/share/rofi/"; 
+cache-dir: "/home/overbeck/.local/share/rofi/";
 /*	window-thumbnail: false;*/
 /*	drun-use-desktop-cache: false;*/
 /*	drun-reload-desktop-cache: false;*/

@@ -3,12 +3,16 @@
 # media.sh: Show MPRIS media status
 #
 
+printf_media ()
+{
+    playerctl metadata -f "{{artist}}  $1  {{title}}" \
+    | sed -e 's/ - Topic//g' -e 's/\.[^.]*$//'
+}
+
 if [ "$(playerctl status 2> /dev/null)" = "Playing" ]; then
-    playerctl metadata -f '{{artist}}    {{title}}' \
-    | sed -e 's/ - Topic//g' -e 's/\..*//'
+    printf_media 
 elif [ "$(playerctl status 2> /dev/null)" = "Paused" ]; then
-    playerctl metadata -f '{{artist}}    {{title}}' \
-    | sed -e 's/ - Topic//g' -e 's/\..*//'
+    printf_media 
 else
     echo
 fi

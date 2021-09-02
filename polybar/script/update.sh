@@ -1,18 +1,24 @@
 #!/usr/bin/sh
 #
-# update.sh: Show number of available pacman and AUR package updates
+# update.sh: Show number of available package updates from the official
+#            repository and AUR
 #
+
+get_log_time ()
+{
+    stat -c %Y /var/log/pacman.log
+}
 
 # refresh polybar ipc
 if [ "$1" = "-r" ]; then
     while pgrep polybar; do
-        log_size=$(du -b /var/log/pacman.log | cut -f 1)
+        log_time=$(get_log_time)
         sleep 5
-        if [ $log_size -ne $(du -b /var/log/pacman.log | cut -f 1) ]; then
+        if [ $log_time -ne $(get_log_time) ]; then
             polybar-msg hook update-ipc 1
         fi
     done
-    exit
+    exit 0
 fi
 
 updates_repo=$(checkupdates | wc -l)
