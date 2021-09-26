@@ -1,3 +1,5 @@
+; vim:ft=dosini
+
 ;==========================================================
 ;
 ;
@@ -29,7 +31,7 @@ foreground = #eeeeee
 foreground-alt = #fff
 ; Arc-Dark colours
 primary = #5294e2
-secondary = #e60053
+secondary = #f70064
 alert = #bd2c40
 
 [settings]
@@ -74,13 +76,13 @@ module-margin-right = 5
 
 font-0 = NotoSans:size=10;1
 font-1 = FontAwesome5Free:style=Solid:size=10;1
-font-2 = FontAwesome5Free:style=Regular:size=10;1
-font-3 = FontAwesome5Brands:style=Regular:size=10;1
-font-4 = NotoSans:style:Bold:size=10;1
+font-2 = NotoSans:style:Bold:size=10;1
+;font-3 = FontAwesome5Free:style=Regular:size=10;1
+;font-4 = FontAwesome5Brands:style=Regular:size=10;1
 
 modules-left = i3 xwindow
 modules-center = media
-modules-right = update update-refresh update-ipc microphone network gpu gpu-temp memory cpu cpu-temp date
+modules-right = update update-refresh update-ipc microphone pulseaudio network gpu gpu-temp memory cpu cpu-temp date
 
 enable-ipc = true
 
@@ -112,16 +114,11 @@ type = custom/script
 exec = $XDG_CONFIG_HOME/polybar/script/media.sh
 interval = 0.1
 
-click-left = playerctl play-pause
-click-right = playerctl stop
-click-middle = playerctl -a play-pause
-scroll-down = playerctl next
-scroll-up = playerctl previous
-
 [module/update]
 type = custom/script
 exec = polybar-msg hook update-ipc 1
-interval = 1800
+; Wait 5 hours between checks
+interval = 18000
 label =
 
 [module/update-refresh]
@@ -136,12 +133,24 @@ hook-0 = $XDG_CONFIG_HOME/polybar/script/update.sh
 [module/microphone]
 type = custom/script
 exec = $XDG_CONFIG_HOME/polybar/script/microphone.sh
-interval = 2
+interval = 0.1
+
+[module/pulseaudio]
+type = internal/pulseaudio
+
+; Red if volume is low or null
+format-volume = <ramp-volume> <label-volume>
+label-volume = %percentage%%
+label-muted = "%{F#f70064}%{F-}"
+
+ramp-volume-0 = "%{F#f70064}%{F-}"
+ramp-volume-1 = 
+ramp-volume-2 = 
 
 [module/xwindow]
 type = internal/xwindow
 label = %title%
-label-maxlen = 75
+label-maxlen = 200
 
 ;[module/xkeyboard]
 ;type = internal/xkeyboard
@@ -159,35 +168,25 @@ label-maxlen = 75
 ;label-indicator-background = ${colors.secondary}
 ;label-indicator-overline = ${colors.secondary}
 
-;[module/filesystem]
-;type = internal/fs
-;interval = 25
-;
-;mount-0 = /
-;
-;label-mounted = %{F#0a81f5}%mountpoint%%{F-}: %percentage_used%%
-;label-unmounted = %mountpoint% not mounted
-;label-unmounted-foreground = ${colors.foreground-alt}
-
-; Separator in between workspaces
-; label-separator = |
-
 [module/i3]
 type = internal/i3
 format = <label-state> <label-mode>
 index-sort = true
-wrapping-scroll = false
+
+;wrapping-scroll = false
+enable-click = false
+enable-scroll = false
 
 ; Only show workspaces on the same output as the bar
 ;pin-workspaces = true
 
-label-mode = "%{T5}%mode%%{T-}"
+label-mode = "%{T3}%mode%%{T-}"
 label-mode-padding = 2
 label-mode-foreground = #000
 label-mode-background = ${colors.primary}
 
 ; focused = Active workspace on focused monitor
-label-focused = "%{T5}%index%%{T-}"
+label-focused = "%{T3}%index%%{T-}"
 label-focused-padding = 2
 label-focused-foreground = #000
 label-focused-background = ${colors.primary}
@@ -221,8 +220,8 @@ ramp-load-2 = 
 ramp-load-3 = 
 ramp-load-4 = 
 ramp-load-5 = 
-ramp-load-6 = "%{F#e60053}%{F-}"
-ramp-load-7 = "%{F#e60053}%{F-}"
+ramp-load-6 = "%{F#f70064}%{F-}"
+ramp-load-7 = "%{F#f70064}%{F-}"
 
 [module/memory]
 type = internal/memory
@@ -236,8 +235,8 @@ ramp-used-2 = 
 ramp-used-3 = 
 ramp-used-4 = 
 ramp-used-5 = 
-ramp-used-6 = "%{F#e60053}%{F-}"
-ramp-used-7 = "%{F#e60053}%{F-}"
+ramp-used-6 = "%{F#f70064}%{F-}"
+ramp-used-7 = "%{F#f70064}%{F-}"
 
 [module/network]
 type = internal/network
@@ -245,7 +244,7 @@ interface = wlo1
 interval = 2
 
 label-connected = " %downspeed%   %upspeed%"
-label-disconnected = "%{F#e60053}%{F-} Disconnected"
+label-disconnected = "%{F#f70064}%{F-} Disconnected"
 
 ;[module/wlan]
 ;type = internal/network
@@ -290,7 +289,7 @@ type = internal/date
 interval = 5
 
 time = "%H:%M"
-date = "%a, %d %b"
+date = "%a %d %b"
 
 ;time-alt =
 ;date-alt = " %a, %d %b"
@@ -299,62 +298,7 @@ format-prefix = 
 format-prefix-foreground = ${colors.foreground-alt}
 
 ; Space before label is required for margin with prefix
-label = " %date% - %time%"
-
-;[module/pulseaudio]
-;type = internal/pulseaudio
-;
-;format-volume = <label-volume> <bar-volume>
-;label-volume = VOL %percentage%%
-;label-volume-foreground = ${root.foreground}
-;
-;label-muted = 
-;label-muted-foreground = #666
-;
-;bar-volume-width = 10
-;bar-volume-foreground-0 = #55aa55
-;bar-volume-foreground-1 = #55aa55
-;bar-volume-foreground-2 = #55aa55
-;bar-volume-foreground-3 = #55aa55
-;bar-volume-foreground-4 = #55aa55
-;bar-volume-foreground-5 = #f5a70a
-;bar-volume-foreground-6 = #ff5555
-;bar-volume-gradient = false
-;bar-volume-indicator = |
-;bar-volume-indicator-font = 2
-;bar-volume-fill = ─
-;bar-volume-fill-font = 2
-;bar-volume-empty = ─
-;bar-volume-empty-font = 2
-;bar-volume-empty-foreground = ${colors.foreground-alt}
-
-;[module/alsa]
-;type = internal/alsa
-;
-;format-volume = <label-volume> <bar-volume>
-;label-volume = VOL
-;label-volume-foreground = ${root.foreground}
-;
-;format-muted-prefix = ""
-;format-muted-foreground = ${colors.foreground-alt}
-;label-muted = sound muted
-;
-;bar-volume-width = 10
-;bar-volume-foreground-0 = #55aa55
-;bar-volume-foreground-1 = #55aa55
-;bar-volume-foreground-2 = #55aa55
-;bar-volume-foreground-3 = #55aa55
-;bar-volume-foreground-4 = #55aa55
-;bar-volume-foreground-5 = #f5a70a
-;bar-volume-foreground-6 = #ff5555
-;bar-volume-gradient = false
-;bar-volume-indicator = |
-;bar-volume-indicator-font = 2
-;bar-volume-fill = ─
-;bar-volume-fill-font = 2
-;bar-volume-empty = ─
-;bar-volume-empty-font = 2
-;bar-volume-empty-foreground = ${colors.foreground-alt}
+label = " %date%   %time%"
 
 [module/cpu-temp]
 type = internal/temperature
@@ -365,7 +309,7 @@ interval = 2
 hwmon-path = /sys/class/hwmon/hwmon1/temp1_input
 
 format = <ramp> <label>
-format-warn = <ramp> CPU: <label-warn>
+format-warn = <ramp> <label-warn>
 ;format-warn-overline = ${self.format-overline}
 
 label = %temperature-c%
@@ -373,7 +317,7 @@ label-warn = %temperature-c%
 
 ramp-0 = 
 ramp-1 = 
-ramp-2 = "%{F#e60053}%{F-}"
+ramp-2 = "%{F#f70064}%{F-}"
 
 [module/gpu-temp]
 type = internal/temperature
@@ -384,7 +328,7 @@ interval = 2
 hwmon-path = /sys/class/hwmon/hwmon3/temp1_input
 
 format = <ramp> <label>
-format-warn = <ramp> CPU: <label-warn>
+format-warn = <ramp> <label-warn>
 ;format-warn-overline = ${self.format-overline}
 
 label = %temperature-c%
@@ -392,7 +336,7 @@ label-warn = %temperature-c%
 
 ramp-0 = 
 ramp-1 = 
-ramp-2 = "%{F#e60053}%{F-}"
+ramp-2 = "%{F#f70064}%{F-}"
 
 [module/gpu]
 type = custom/script
@@ -400,6 +344,3 @@ exec = /usr/bin/sh -c 'echo $(cat /sys/class/drm/card0/device/gpu_busy_percent)%
 
 interval = 2
 format-prefix = " "
-
-; Syntax highlighting
-; vim:ft=dosini

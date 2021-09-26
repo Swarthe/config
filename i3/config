@@ -19,25 +19,28 @@ font pango:Noto Sans Medium 8
 # The combination of xss-lock, nm-applet and pactl is a popular choice, so
 # they are included here as an example. Modify as you see fit.
 
-# Disable X turning off display
+# Disable X automatically turning off display
 exec --no-startup-id xset s off
 exec --no-startup-id xset -dpms
 exec --no-startup-id xset s noblank
 
+# Background image path
+set $bg_path $HOME/image/batch/background
+
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
-exec_always --no-startup-id killall -q xss-lock; xss-lock --transfer-sleep-lock -- \
-i3lock --nofork --indicator --clock --fill --pass-{media,power}-keys \
---greeter-text="$USER" --time-str='%H:%M' --date-str='%a, %d %b' \
+exec_always --no-startup-id killall -q xss-lock; \
+xss-lock --transfer-sleep-lock -- i3lock --nofork --indicator --clock --fill \
+--greeter-text="$USER" --time-str='%H:%M' --date-str='%a %d %b' \
 --verif-text="Verifying..." --wrong-text="Incorrect!" --noinput-text="No Input" \
 --{date,time,greeter}-color=ffeeeeee --ring-width 5 --color=00000000 \
---image=$(find image/saved/theme/background/spatial/ -type f | shuf -n 1) \
+--image=$(find $bg_path/spatial/ -type f | shuf -n 1) \
 --ring-color=2062b0 --ringver-color=009900 --keyhl-color=63a5f3 \
 --insidever-color=009900ff
 
 # set background with feh
-exec_always --no-startup-id feh --no-fehbg --recursive --bg-fill --randomize \
-/home/overbeck/image/saved/theme/background/
+exec_always --no-startup-id feh --no-fehbg --bg-fill --randomize \
+$bg_path/surreal
 
 # automatically lock the display + sleep
 exec_always --no-startup-id killall -q xidlehook; xidlehook \
@@ -48,20 +51,22 @@ exec_always --no-startup-id killall -q xidlehook; xidlehook \
 # and nm-applet is a desktop environment-independent system tray GUI for it.
 #exec --no-startup-id nm-applet
 
-# Media player controls
-bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause
-bindsym XF86AudioPause exec --no-startup-id playerctl play-pause
-bindsym Shift+XF86AudioPlay exec --no-startup-id playerctl -a play-pause
-bindsym Shift+XF86AudioPause exec --no-startup-id playerctl -a play-pause
-bindsym XF86AudioNext exec --no-startup-id playerctl next
-bindsym XF86AudioPrev exec --no-startup-id playerctl previous
-
 # Use pactl to adjust volume in PulseAudio.
-#set $refresh_i3status killall -q -SIGUSR1 i3status
-#bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
-#bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
-#bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
-#bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+bindsym $mod+period exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10%
+bindsym $mod+comma exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10%
+# Adjust or reset volume only for latest used player
+bindsym $mod+Shift+period exec --no-startup-id playerctl volume 0.1+
+bindsym $mod+Shift+comma exec --no-startup-id playerctl volume 0.1-
+bindsym $mod+slash exec --no-startup-id playerctl volume 1
+# Mute sound or microphone
+bindsym $mod+m exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym $sup+m exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle
+
+# Pause/Play and skip media
+bindsym $mod+p exec --no-startup-id playerctl play-pause            # Latest player
+bindsym $mod+Shift+p exec --no-startup-id playerctl -a play-pause   # All players
+bindsym $mod+bracketleft exec --no-startup-id playerctl previous
+bindsym $mod+bracketright exec --no-startup-id playerctl next
 
 # $mod = Wind0ws key, $sup = Alt
 set $mod Mod4
@@ -84,29 +89,30 @@ bindsym $mod+Return exec --no-startup-id i3-sensible-terminal
 # rofi or terminal for that)
 mode "Launch" {
     # These bindings trigger as soon as you enter the launch mode
-    bindsym f exec                    firefox;        mode "default"
-    bindsym d exec --no-startup-id    discord;        mode "default"
-    bindsym e exec                    easyeffects;    mode "default"
-    bindsym s exec --no-startup-id    steam;          mode "default"
-    bindsym p exec                    pavucontrol;    mode "default"
-    bindsym t exec                    tor-browser;    mode "default"
-    bindsym b exec                    baobab;         mode "default"
+    bindsym f exec                      firefox;            mode "default"
+    bindsym d exec --no-startup-id      discord;            mode "default"
+    bindsym e exec                      easyeffects;        mode "default"
+    bindsym s exec --no-startup-id      steam;              mode "default"
+    bindsym p exec                      pavucontrol;        mode "default"
+    bindsym t exec                      tor-browser;        mode "default"
+    bindsym b exec                      blueman-manager;    mode "default"
+    bindsym Shift+b exec                baobab;             mode "default"
 
     # back to normal: Enter or Escape or $mod+apostrophe
     bindsym Return mode "default"
     bindsym Escape mode "default"
-    bindsym $mod+apostrophe mode "default"
+    bindsym $sup+Return mode "default"
 }
 
-bindsym $mod+apostrophe mode "Launch"
+bindsym $sup+Return mode "Launch"
 
 # Quit or suspend the session
 mode "Quit" {
     # These bindings trigger as soon as you enter the launch mode
-    bindsym p exec --no-startup-id    systemctl poweroff;     mode "default"
-    bindsym s exec --no-startup-id    systemctl suspend;      mode "default"
-    bindsym h exec --no-startup-id    systemctl hibernate;    mode "default"
-    bindsym r exec --no-startup-id    systemctl reboot;       mode "default"
+    bindsym p exec --no-startup-id      systemctl poweroff;     mode "default"
+    bindsym s exec --no-startup-id      systemctl suspend;      mode "default"
+    bindsym h exec --no-startup-id      systemctl hibernate;    mode "default"
+    bindsym r exec --no-startup-id      systemctl reboot;       mode "default"
 
     # back to normal: Enter or Escape or $mod+q
     bindsym Return mode "default"
@@ -124,16 +130,16 @@ mode "Resize" {
     # Pressing right will grow the window’s width.
     # Pressing up will shrink the window’s height.
     # Pressing down will grow the window’s height.
-    bindsym $left     resize shrink width 10 px or 10 ppt
-    bindsym $down     resize grow height 10 px or 10 ppt
-    bindsym $up       resize shrink height 10 px or 10 ppt
-    bindsym $right    resize grow width 10 px or 10 ppt
+    bindsym $left       resize shrink width 10 px or 10 ppt
+    bindsym $down       resize grow height 10 px or 10 ppt
+    bindsym $up         resize shrink height 10 px or 10 ppt
+    bindsym $right      resize grow width 10 px or 10 ppt
 
     # same bindings, but for the arrow keys
-    bindsym Left     resize shrink width 10 px or 10 ppt
-    bindsym Down     resize grow height 10 px or 10 ppt
-    bindsym Up       resize shrink height 10 px or 10 ppt
-    bindsym Right    resize grow width 10 px or 10 ppt
+    bindsym Left        resize shrink width 10 px or 10 ppt
+    bindsym Down        resize grow height 10 px or 10 ppt
+    bindsym Up          resize shrink height 10 px or 10 ppt
+    bindsym Right       resize grow width 10 px or 10 ppt
 
     # back to normal: Enter or Escape or $mod+r
     bindsym Return mode "default"
@@ -143,23 +149,23 @@ mode "Resize" {
 
 bindsym $mod+r mode "Resize"
 
-
-# take a screenshot
-bindsym $mod+s --release exec --no-startup-id scot -g
-bindsym $mod+Shift+s exec --no-startup-id scot -dg
-bindsym $mod+$sup+s --release exec --no-startup-id scot -fg
-bindsym $mod+$sup+Shift+s exec --no-startup-id scot -dgf
+# take a screenshot (scot is a custom script from
+# <https://github.com/Swarthe/utility>)
+bindsym $mod+s --release exec --no-startup-id scot
+bindsym $mod+Shift+s --release exec --no-startup-id scot -f
+bindsym $mod+$sup+s exec --no-startup-id scot -d
+bindsym $mod+$sup+Shift+s exec --no-startup-id scot -df
 
 # Run graphical applications with rofi
 bindsym $sup+r exec --no-startup-id rofi -show drun
 # Open files directly with rofi and file-browser-extended:
-bindsym $sup+space exec --no-startup-id rofi -lines 14 -show file-browser-extended
+bindsym $sup+space exec --no-startup-id rofi -show file-browser-extended
 # Window switcher with rofi
 bindsym $sup+Tab exec --no-startup-id rofi -show window
 # Clipboard with rofi and greenclip
 bindsym $sup+c exec --no-startup-id rofi -show clipboard
 # Query the internet with tweaked rofi and tuxi
-bindsym $sup+q exec --no-startup-id "rofi -lines 16 \
+bindsym $sup+q exec --no-startup-id "rofi \
 -theme-str \\"* { selected-normal-background: @background; }\\" \
 -theme-str \\"* { selected-normal-foreground: @foreground; }\\" \
 -theme-str \\"* { alternate-normal-background: @background; }\\" \
@@ -287,8 +293,8 @@ gaps outer 0
 
 # Autostart programs
 exec --no-startup-id polybar main
-exec_always --no-startup-id killall -q autotiling; autotiling
 exec_always --no-startup-id killall -q picom; picom
+exec_always --no-startup-id killall -q autotiling; autotiling
 exec_always --no-startup-id killall -q greenclip; greenclip daemon
 exec_always --no-startup-id killall -q playerctld; playerctld daemon
 exec_always --no-startup-id killall -q dunst; dunst

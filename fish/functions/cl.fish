@@ -1,3 +1,3 @@
-function cl --wraps='cd && ls' --description 'alias cl=cd && ls'
-  cd $argv && ls;
+function cs --wraps='cd' --description 'alias cs=cd && ls'
+  cd $argv && ls
 end

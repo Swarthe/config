@@ -5,14 +5,14 @@
 
 printf_media ()
 {
-    playerctl metadata -f "{{artist}}  $1  {{title}}" \
+    playerctl metadata -f "{{artist}}   $*   {{title}}" \
     | sed -e 's/ - Topic//g' -e 's/\.[^.]*$//'
 }
 
 if [ "$(playerctl status 2> /dev/null)" = "Playing" ]; then
-    printf_media 
+    printf_media ""
 elif [ "$(playerctl status 2> /dev/null)" = "Paused" ]; then
-    printf_media 
+    printf_media ""
 else
     echo
 fi

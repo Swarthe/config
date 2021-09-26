@@ -5,14 +5,24 @@
 " Plugins with nvim-plug
 call plug#begin('/opt/nvim-plug')
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+    " Latex integration
     Plug 'lervag/vimtex', { 'for': ['tex']}
+    " Status bar
     Plug 'vim-airline/vim-airline'
+    " File browser
     Plug 'preservim/nerdtree'
+        " Git status flags
+        Plug 'Xuyuanp/nerdtree-git-plugin'
+    " Git client
     Plug 'tpope/vim-fugitive'
+    " Autocomplete suggestions
     Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
         " 9000+ Snippets
         Plug 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
     Plug 'jiangmiao/auto-pairs'
+    " Improved markdown lists
+    Plug 'dkarter/bullets.vim'
+    Plug 'Konfekt/vim-DetectSpellLang'
 call plug#end()
 
 " Configure statusline (airline)
@@ -34,32 +44,64 @@ let g:mkdp_preview_options = {
 let g:mkdp_page_title = '${name}'
 
 " Configure NERDTree
-let NERDTreeQuitOnOpen = 1
+"let NERDTreeQuitOnOpen = 0
 " Close the tab if NERDTree is the only window remaining in it.
-autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree')
+au BufEnter * if winnr('$') == 1 && exists('b:NERDTree')
     \ && b:NERDTree.isTabTree() | quit | endif
 " Start NERDTree when Vim is started without file arguments.
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
+au StdinReadPre * let s:std_in=1
+au VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | wincmd p | endif
 " Make NERDTree prettier
 let NERDTreeMinimalUI = 1
 
+" Configure nerdtree-git-plugin
+let g:NERDTreeGitStatusShowClean = 0
+" This option completely breaks nerdtree-git-plugin
+"let g:nerdtreegitstatusconcealbrackets = 1
+
+" This plugin only works nvim is run inside a git directory
+
 " Configure COQ
 let g:coq_settings = {
-    \ 'auto_start': 'shut-up',
-    \ 'match.unifying_chars': ["_"]
-    \ }
+    \ 'auto_start'                  : 'shut-up',
+    \ 'match.unifying_chars'        : ["_"],
+    \ 'display.ghost_text.context'  : [ " ", ""],
+    \ 'keymap.jump_to_mark'         : "<c-q>"
+    \ }                               " Default <c-h> breaks for us
 
 " Configure auto-pairs
 " Change or disable all insert mode shortcuts
-let g:AutoPairsShortcutToggle = '<C-M-b>'    " For Brackets
+let g:AutoPairsShortcutToggle = '<C-M-b>'       " For Brackets
 let g:AutoPairsShortcutFastWrap = ''
-let g:AutoPairsShortcutJump = ''
+"let g:AutoPairsShortcutJump = ''                " <M-n>
 let g:AutoPairsShortcutBackInsert = ''
+" Disable unneeded options
+let g:AutoPairsMapCh = '0'
+let g:AutoPairsCenterLine = '0'
+let g:AutoPairsMapSpace = '0'
+" Tweak pairs for markdown files
+au Filetype markdown let b:AutoPairs = {   '(':')',
+                                        \  '[':']',
+                                        \  '{':'}',
+                                        \  "'":"'",
+                                        \  '"':'"',
+                                        \  '`':'`',
+                                        \  '*':'*',
+                                        \ '**':'**'
+                                        \ }
+
+" Configure vim-DetectSpellLang
+let g:detectspelllang_langs = {
+    \ 'hunspell': [ 'en_GB', 'fr_FR', 'da_DK', 'en_US' ],
+    \ 'aspell'  : [ 'en_GB', 'fr_FR', 'da_DK', 'en_US' ],
+    \ }
 
 "
 " Miscellaneous
 "
+
+" Disable default mode indicator (we have airline)
+set noshowmode
 
 " Show a few lines of context around the cursor.  Note that this makes the
 " text scroll if you mouse-click near the start or end of the window.
@@ -69,20 +111,20 @@ set scrolloff=5
 set suffixes+=.aux,.bbl,.blg,.brf,.cb,.dvi,.idx,.ilg,.ind,.inx,.jpg,.log,.out,.png,.toc
 set suffixes-=.h
 set suffixes-=.obj
-" For automatic comment features
+" For line-based features
 set formatoptions+=ro
-
-" Highlight the 81st non-whitespace character on all lines
 set textwidth=80
-hi ColorColumn ctermbg=red guibg=DarkRed
-call matchadd('ColorColumn', '\%81v\S', 100)
-" Highlight trailing whitespace when not in insert mode on or after it.
-highlight ExtraWhitespace ctermbg=red guibg=Red
-match ExtraWhitespace /\s\+\%#\@<!$/
 
 " When on, the ":substitute" flag 'g' is default on.  This means that all
 " matches in a line are substituted instead of one.
 set gdefault
+
+" Highlight the 81st non-whitespace character on all lines
+hi Over80Chars ctermbg=red guibg=DarkRed
+let w:m1=matchadd('Over80Chars', '\%>80v.\+', -1)
+" Highlight trailing whitespace when not in insert mode on or after it.
+hi ExtraWhitespace ctermbg=red guibg=Red
+match ExtraWhitespace /\s\+\%#\@<!$/
 
 " Improve colours if not in TTY (Arc-Dark inspired theme)
 if !empty($DISPLAY)
@@ -101,17 +143,30 @@ if !empty($DISPLAY)
     hi TabLineFill guifg=#383c4a
     hi TabLine guifg=#cccccc guibg=#383c4a
     hi TabLineSel guifg=White guibg=#4b5162
-    " Window border
-    hi VertSplit guifg=#494d5b guibg=#494d5b
+    " Window border and statusline intersection
+    hi VertSplit guifg=#3e4452 guibg=#3e4452
+    hi StatusLineNC guifg=#3e4452
+    hi Statusline guifg=#3e4452
+    " Comments
+    hi Comment gui=italic
 endif
+
+" Use semi-persistent history.
+call mkdir("/tmp/nvim-1000/undo", "p", 0700)
+set undodir=/tmp/nvim-1000/undo
+set undofile
 
 " Enable and configure spellcheck
 set spell
-setlocal spell spelllang=en_gb
-"setlocal spell spelllang=da_dk
-"setlocal spell spelllang=fr_fr
+" Selection is not needed thanks to vim-DetectSpellLang
+"setlocal spell spelllang=en_gb
+"setlocal spell spelllang=fr
+"setlocal spell spelllang=da
 "setlocal spell spelllang=en_us
-set spellsuggest+=10
+set spellsuggest=10
+
+" Set leader to comma instead of backslash
+let mapleader = ","
 
 " General shortcuts
 " Split window shortcuts
@@ -120,23 +175,31 @@ nmap <silent> <A-j> :wincmd j<CR>
 nmap <silent> <A-h> :wincmd h<CR>
 nmap <silent> <A-l> :wincmd l<CR>
 " Autocorrect or autocomplete spelling and move to the end of a word.
-inoremap <silent> <C-s> <C-c>1z=ea
+inoremap <silent> <C-s> <Esc>1z=ea
 " Automatically format Code and return to the previous absolute location
-" (the format command should be a shell alias to a formatting tool)
-nmap <C-c> ma:%!format<CR>`a
+" (the cfmt command is a shell alias to a formatting tool for C style languages
+" in this case).
+au Filetype c,cpp,cf,java,arduino nmap <buffer> <C-c> ma:%!cfmt<CR>`a
 " Diff original file and buffer
-nmap <C-M-o> :Difforig<CR>
+nmap <C-M-o> :Difforig<CR>:wincmd p<CR>
 " Delete (Eliminate) the next word without saving to register
-inoremap <C-e> <C-o>"_de
+inoremap <silent> <C-e> <C-o>"_de
+" CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
+" so that you can undo CTRL-U (delete from cursor to beginning of line) after
+" inserting a line break.
+inoremap <silent> <C-u> <C-G>u<C-U>
+" Similarly, to delete from cursor until the end of the line.
+inoremap <silent> <C-M-u> <C-o>D
+" Use Q for formatting.
+map Q gq
 
 " Plugin Shortcuts
 " markdown-preview shortcuts
-nmap <C-p> <Plug>MarkdownPreviewToggle
-nmap <C-M-p> <Plug>MarkdownPreviewStop
+nmap <silent> <C-p> <Plug>MarkdownPreviewToggle
+nmap <silent> <C-M-p> <Plug>MarkdownPreviewStop
 " NERDTree shortcuts
-nnoremap <C-n> :NERDTreeFind<CR>
-nnoremap <C-M-n> :NERDTreeToggle<CR>
-
+nnoremap <silent> <C-n> :NERDTreeFind<CR>
+nnoremap <silent> <C-M-n> :NERDTreeToggle<CR>
 
 " Show @@@ in the last line if it is truncated.
 set display=truncate
@@ -159,22 +222,17 @@ set shiftwidth=4
 set expandtab
 " Apply indentation of the current line to the next when created.
 set smartindent
+" Every wrapped line will continue visually indented (same amount of space as
+" the beginning of that line)
+set breakindent
 
 " When 'confirm' is on, certain operations that would normally fail because of
-" unsaved changes to a buffer, e.g. ":q" and ":e", instead raise a dialog
-" asking if you wish to save the current file(s).
+" unsaved changes to a buffer, e.g. ":q" and ":e", instead raise a dialog asking
+" if you wish to save the current file(s).
 set confirm
 
 " Use X clipboard.
 set clipboard=unnamedplus
-
-" Use Q for formatting. Revert with ":unmap Q".
-map Q gq
-
-" CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
-" so that you can undo CTRL-U after inserting a line break.
-" Revert with ":iunmap <C-U>".
-inoremap <C-U> <C-G>u<C-U>
 
 " In many terminal emulators the mouse works just fine.  By enabling it you
 " can position the cursor, Visually select and scroll with the mouse.
@@ -182,13 +240,13 @@ inoremap <C-U> <C-G>u<C-U>
 " terminals use ":", select text and press Esc.
 set mouse=a
 
-" When editing a file, always jump to the last known cursor position.
-" Don't do it when the position is invalid, when inside an event handler
-" (happens when dropping a file on gvim) and for a commit message (it's
+" When editing a file, always jump to the last known cursor position and centre
+" the line.  Don't do it when the position is invalid, when inside an event
+" handler (happens when dropping a file on gvim) and for a commit message (it's
 " likely a different one than last time).
-autocmd BufReadPost *
+au BufReadPost *
     \ if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
-    \ |   exe "normal! g`\""
+    \ |   exe "normal! g`\"zz"
     \ | endif
 
 " Convenient command to see the difference between the current buffer and the
@@ -196,5 +254,5 @@ autocmd BufReadPost *
 " Only define it when not defined already.
 " Revert with: ":delcommand Difforig".
 command Difforig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
-\ | wincmd p | diffthis
+    \ | wincmd p | diffthis
 

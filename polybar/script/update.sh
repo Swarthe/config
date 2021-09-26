@@ -1,7 +1,7 @@
 #!/usr/bin/sh
 #
 # update.sh: Show number of available package updates from the official
-#            repository and AUR
+#            repositories and AUR
 #
 
 get_log_time ()
@@ -22,10 +22,10 @@ if [ "$1" = "-r" ]; then
 fi
 
 updates_repo=$(checkupdates | wc -l)
-updates_aur=$(yay -Qum | wc -l)
+updates_aur=$(paru -Qum | wc -l)
 
 if [ $(($updates_repo + $updates_aur)) -eq 0 ]; then
     echo
 else
-    echo "%{F#e60053}%{F-} $updates_repo | $updates_aur"
+    echo "%{F#e60053}%{F-} $updates_repo   $updates_aur"
 fi
