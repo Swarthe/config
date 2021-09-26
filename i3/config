@@ -51,26 +51,50 @@ exec_always --no-startup-id killall -q xidlehook; xidlehook \
 # and nm-applet is a desktop environment-independent system tray GUI for it.
 #exec --no-startup-id nm-applet
 
-# Use pactl to adjust volume in PulseAudio.
+# $mod = Wind0ws key, $sup = Alt
+set $mod Mod4
+set $sup Mod1
+
+#
+# Media management
+#
+
+# The shift modifier here usually determines whether the operation will apply to
+# the latest or all players, and $sup the extent of operation
+# Use pactl to control volume in PulseAudio.
 bindsym $mod+period exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10%
 bindsym $mod+comma exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10%
-# Adjust or reset volume only for latest used player
+
+# Switch Player
+bindsym $mod+backslash exec --no-startup-id playerctld shift
+bindsym $mod+Shift+backslash exec --no-startup-id playerctld unshift
+
+# Control volume only for latest used player (useful when in a call for example)
 bindsym $mod+Shift+period exec --no-startup-id playerctl volume 0.1+
 bindsym $mod+Shift+comma exec --no-startup-id playerctl volume 0.1-
 bindsym $mod+slash exec --no-startup-id playerctl volume 1
+bindsym $mod+Shift+slash exec --no-startup-id playerctl volume 0
+
 # Mute sound or microphone
 bindsym $mod+m exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
 bindsym $sup+m exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle
 
-# Pause/Play and skip media
-bindsym $mod+p exec --no-startup-id playerctl play-pause            # Latest player
-bindsym $mod+Shift+p exec --no-startup-id playerctl -a play-pause   # All players
+# Pause/Play, seek and skip media
+bindsym $mod+p exec --no-startup-id playerctl play-pause
 bindsym $mod+bracketleft exec --no-startup-id playerctl previous
 bindsym $mod+bracketright exec --no-startup-id playerctl next
+# Large seeks
+bindsym $mod+Shift+bracketleft exec --no-startup-id playerctl position 600-
+bindsym $mod+Shift+bracketright exec --no-startup-id playerctl position 600+
+# Small seeks
+bindsym $sup+bracketleft exec --no-startup-id playerctl position 5-
+bindsym $sup+bracketright exec --no-startup-id playerctl position 5+
+bindsym $sup+Shift+bracketleft exec --no-startup-id playerctl position 60-
+bindsym $sup+Shift+bracketright exec --no-startup-id playerctl position 60+
 
-# $mod = Wind0ws key, $sup = Alt
-set $mod Mod4
-set $sup Mod1
+#
+#
+#
 
 # use these keys for focus, movement, and resize directions when reaching for
 # the arrows is not convenient
@@ -98,7 +122,7 @@ mode "Launch" {
     bindsym b exec                      blueman-manager;    mode "default"
     bindsym Shift+b exec                baobab;             mode "default"
 
-    # back to normal: Enter or Escape or $mod+apostrophe
+    # back to normal
     bindsym Return mode "default"
     bindsym Escape mode "default"
     bindsym $sup+Return mode "default"
@@ -114,7 +138,7 @@ mode "Quit" {
     bindsym h exec --no-startup-id      systemctl hibernate;    mode "default"
     bindsym r exec --no-startup-id      systemctl reboot;       mode "default"
 
-    # back to normal: Enter or Escape or $mod+q
+    # back to normal
     bindsym Return mode "default"
     bindsym Escape mode "default"
     bindsym $mod+q mode "default"
@@ -141,7 +165,7 @@ mode "Resize" {
     bindsym Up          resize shrink height 10 px or 10 ppt
     bindsym Right       resize grow width 10 px or 10 ppt
 
-    # back to normal: Enter or Escape or $mod+r
+    # back to normal
     bindsym Return mode "default"
     bindsym Escape mode "default"
     bindsym $mod+r mode "default"
