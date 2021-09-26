@@ -25,7 +25,7 @@ call plug#begin('/opt/nvim-plug')
     Plug 'Konfekt/vim-DetectSpellLang'
 call plug#end()
 
-" Configure statusline (airline)
+" airline
 let g:airline_theme='onedark'
 "let g:airline_powerline_fonts = 1
 
@@ -43,7 +43,7 @@ let g:mkdp_preview_options = {
 " ${name} will be replace with the file name
 let g:mkdp_page_title = '${name}'
 
-" Configure NERDTree
+" NERDTree
 "let NERDTreeQuitOnOpen = 0
 " Close the tab if NERDTree is the only window remaining in it.
 au BufEnter * if winnr('$') == 1 && exists('b:NERDTree')
@@ -54,14 +54,13 @@ au VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | wincmd p | endi
 " Make NERDTree prettier
 let NERDTreeMinimalUI = 1
 
-" Configure nerdtree-git-plugin
+" nerdtree-git-plugin
+" This plugin only works nvim is run inside a git directory
 let g:NERDTreeGitStatusShowClean = 0
 " This option completely breaks nerdtree-git-plugin
 "let g:nerdtreegitstatusconcealbrackets = 1
 
-" This plugin only works nvim is run inside a git directory
-
-" Configure COQ
+" COQ
 let g:coq_settings = {
     \ 'auto_start'                  : 'shut-up',
     \ 'match.unifying_chars'        : ["_"],
@@ -69,9 +68,8 @@ let g:coq_settings = {
     \ 'keymap.jump_to_mark'         : "<c-q>"
     \ }                               " Default <c-h> breaks for us
 
-" Configure auto-pairs
-" Change or disable all insert mode shortcuts
-let g:AutoPairsShortcutToggle = '<C-M-b>'       " For Brackets
+" auto-pairs
+" Change or disable all unnecessary insert mode shortcuts
 let g:AutoPairsShortcutFastWrap = ''
 "let g:AutoPairsShortcutJump = ''                " <M-n>
 let g:AutoPairsShortcutBackInsert = ''
@@ -90,11 +88,64 @@ au Filetype markdown let b:AutoPairs = {   '(':')',
                                         \ '**':'**'
                                         \ }
 
-" Configure vim-DetectSpellLang
+" vim-DetectSpellLang
 let g:detectspelllang_langs = {
     \ 'hunspell': [ 'en_GB', 'fr_FR', 'da_DK', 'en_US' ],
     \ 'aspell'  : [ 'en_GB', 'fr_FR', 'da_DK', 'en_US' ],
     \ }
+
+"
+" Keybind
+"
+
+" Plugin
+
+" markdown-preview
+nmap <silent> <C-p> <Plug>MarkdownPreviewToggle
+nmap <silent> <C-M-p> <Plug>MarkdownPreviewStop
+
+" NERDTree
+nnoremap <silent> <C-n> :NERDTreeFind<CR>
+nnoremap <silent> <C-M-n> :NERDTreeToggle<CR>
+
+" auto-pairs
+let g:AutoPairsShortcutToggle = '<C-M-b>'       " For Brackets
+
+" Internal
+
+" Split window shortcuts
+nmap <silent> <A-k> :wincmd k<CR>
+nmap <silent> <A-j> :wincmd j<CR>
+nmap <silent> <A-h> :wincmd h<CR>
+nmap <silent> <A-l> :wincmd l<CR>
+
+" Autocorrect or autocomplete spelling and move to the end of a word.
+inoremap <silent> <C-s> <Esc>1z=ea
+
+" Automatically format Code and return to the previous absolute location
+" (the cfmt command is a shell alias to a formatting tool for C style languages
+" in this case).
+au Filetype c,cpp,cf,java,arduino nmap <buffer> <C-c> ma:%!cfmt<CR>`a
+
+" Diff original file and buffer
+nmap <C-M-o> :Difforig<CR>:wincmd p<CR>
+
+" Delete (Eliminate) the next word without saving to register
+inoremap <silent> <C-e> <C-o>"_de
+
+" CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
+" so that you can undo CTRL-U (delete from cursor to beginning of line) after
+" inserting a line break.
+inoremap <silent> <C-u> <C-G>u<C-U>
+
+" Similarly, to delete from cursor until the end of the line.
+inoremap <silent> <C-M-u> <C-o>D
+
+" Use Q for formatting.
+map Q gq
+
+" Set leader to comma instead of backslash
+let mapleader = ","
 
 "
 " Miscellaneous
@@ -164,42 +215,6 @@ set spell
 "setlocal spell spelllang=da
 "setlocal spell spelllang=en_us
 set spellsuggest=10
-
-" Set leader to comma instead of backslash
-let mapleader = ","
-
-" General shortcuts
-" Split window shortcuts
-nmap <silent> <A-k> :wincmd k<CR>
-nmap <silent> <A-j> :wincmd j<CR>
-nmap <silent> <A-h> :wincmd h<CR>
-nmap <silent> <A-l> :wincmd l<CR>
-" Autocorrect or autocomplete spelling and move to the end of a word.
-inoremap <silent> <C-s> <Esc>1z=ea
-" Automatically format Code and return to the previous absolute location
-" (the cfmt command is a shell alias to a formatting tool for C style languages
-" in this case).
-au Filetype c,cpp,cf,java,arduino nmap <buffer> <C-c> ma:%!cfmt<CR>`a
-" Diff original file and buffer
-nmap <C-M-o> :Difforig<CR>:wincmd p<CR>
-" Delete (Eliminate) the next word without saving to register
-inoremap <silent> <C-e> <C-o>"_de
-" CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
-" so that you can undo CTRL-U (delete from cursor to beginning of line) after
-" inserting a line break.
-inoremap <silent> <C-u> <C-G>u<C-U>
-" Similarly, to delete from cursor until the end of the line.
-inoremap <silent> <C-M-u> <C-o>D
-" Use Q for formatting.
-map Q gq
-
-" Plugin Shortcuts
-" markdown-preview shortcuts
-nmap <silent> <C-p> <Plug>MarkdownPreviewToggle
-nmap <silent> <C-M-p> <Plug>MarkdownPreviewStop
-" NERDTree shortcuts
-nnoremap <silent> <C-n> :NERDTreeFind<CR>
-nnoremap <silent> <C-M-n> :NERDTreeToggle<CR>
 
 " Show @@@ in the last line if it is truncated.
 set display=truncate
