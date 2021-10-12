@@ -196,6 +196,11 @@ bindsym $sup+q exec --no-startup-id "rofi \
 -theme-str \\"* { alternate-normal-background: @background; }\\" \
 -theme-str \\"listview { spacing: 0px; }\\" \
 -show query"
+# Drag and drop files with dragon and file-browser-extended
+# Works as expected with 'open multi' ('Alt+2' by default)
+bindsym $sup+d exec --no-startup-id \
+rofi -show file-browser-extended -file-browser-cmd \
+"dragon-drag-and-drop -x" -display-file-browser-extended "drag"
 
 # kill focused window (force ctrl+q)
 bindsym control+$sup+q kill
