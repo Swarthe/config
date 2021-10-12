@@ -80,15 +80,16 @@ let g:AutoPairsMapCh = '0'
 let g:AutoPairsCenterLine = '0'
 let g:AutoPairsMapSpace = '0'
 " Tweak pairs for markdown files
-au Filetype markdown let b:AutoPairs = {   '(':')',
-                                        \  '[':']',
-                                        \  '{':'}',
-                                        \  "'":"'",
-                                        \  '"':'"',
-                                        \  '`':'`',
-                                        \  '*':'*',
-                                        \ '**':'**'
-                                        \ }
+au Filetype markdown let b:AutoPairs = { '(':')',
+                                     \   '[':']',
+                                     \   '{':'}',
+                                     \   "'":"'",
+                                     \   '"':'"',
+                                     \   '`':'`',
+                                     \ '```':'```',
+                                     \   '*':'*',
+                                     \  '**':'**'
+                                     \ }
 
 " vim-DetectSpellLang
 let g:detectspelllang_langs = {
