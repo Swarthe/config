@@ -17,11 +17,11 @@ is_used ()
 
 # Red if microphone is claimed by process
 if is_muted && is_used; then
-    echo "%{F#e60053}%{F-}"
+    printf '%s\n' "%{F#e60053}%{F-}"
 elif is_muted; then
-    echo ""
+    printf '%s\n' ""
 elif is_used; then
-    echo "%{F#e60053}%{F-}"
+    printf '%s\n' "%{F#e60053}%{F-}"
 else
-    echo
+    printf '\n'
 fi

@@ -24,7 +24,7 @@
 
 [colors]
 ;background = ${xrdb:color0:#222}
-background = #3321342c
+background = #33383c4a
 background-alt = #404552
 ;foreground = ${xrdb:color7:#222}
 foreground = #eeeeee
@@ -121,11 +121,13 @@ exec = polybar-msg hook update-ipc 1
 interval = 18000
 label =
 
+; monitor pacman log
 [module/update-refresh]
 type = custom/script
 exec = $XDG_CONFIG_HOME/polybar/script/update.sh -r
 label =
 
+; check updates if pacman operations have occurred
 [module/update-ipc]
 type = custom/ipc
 hook-0 = $XDG_CONFIG_HOME/polybar/script/update.sh
@@ -150,7 +152,7 @@ ramp-volume-2 = 
 [module/xwindow]
 type = internal/xwindow
 label = %title%
-label-maxlen = 200
+label-maxlen = 120
 
 ;[module/xkeyboard]
 ;type = internal/xkeyboard

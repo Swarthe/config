@@ -14,5 +14,5 @@ if [ "$(playerctl status 2> /dev/null)" = "Playing" ]; then
 elif [ "$(playerctl status 2> /dev/null)" = "Paused" ]; then
     printf_media ""
 else
-    echo
+    printf '\n'
 fi

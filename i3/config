@@ -25,7 +25,7 @@ exec --no-startup-id xset -dpms
 exec --no-startup-id xset s noblank
 
 # Background image path
-set $bg_path $HOME/image/batch/background
+set $bg_path $HOME/image/selection/good/background
 
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
@@ -51,7 +51,8 @@ exec_always --no-startup-id killall -q xidlehook; xidlehook \
 # and nm-applet is a desktop environment-independent system tray GUI for it.
 #exec --no-startup-id nm-applet
 
-# $mod = Wind0ws key, $sup = Alt
+# $mod = Wind0ws key (used for almost everything), $sup = Alt (used for rofi and
+# alternate shortcuts)
 set $mod Mod4
 set $sup Mod1
 
@@ -196,7 +197,7 @@ bindsym $sup+q exec --no-startup-id "rofi \
 -theme-str \\"listview { spacing: 0px; }\\" \
 -show query"
 
-# kill focused window
+# kill focused window (force ctrl+q)
 bindsym control+$sup+q kill
 
 # change focus

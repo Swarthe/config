@@ -42,6 +42,8 @@ let g:mkdp_preview_options = {
 " preview page title
 " ${name} will be replace with the file name
 let g:mkdp_page_title = '${name}'
+" Echo preview page URL in command line when opened
+let g:mkdp_echo_preview_url = 1
 
 " NERDTree
 "let NERDTreeQuitOnOpen = 0
@@ -113,14 +115,22 @@ let g:AutoPairsShortcutToggle = '<C-M-b>'       " For Brackets
 
 " Internal
 
-" Split window shortcuts
+" Set leader to comma instead of backslash
+let mapleader = ","
+
+" Use Q for formatting.
+map Q gq
+
+" Split window and tab shortcuts
 nmap <silent> <A-k> :wincmd k<CR>
 nmap <silent> <A-j> :wincmd j<CR>
 nmap <silent> <A-h> :wincmd h<CR>
 nmap <silent> <A-l> :wincmd l<CR>
 
-" Autocorrect or autocomplete spelling and move to the end of a word.
-inoremap <silent> <C-s> <Esc>1z=ea
+nmap <silent> <C-j> :tabNext<cr>
+nmap <silent> <C-k> :tabnext<cr>
+nmap <silent> <C-l> :tablast<cr>
+nmap <silent> <C-h> :tabfirst<CR>
 
 " Automatically format Code and return to the previous absolute location
 " (the cfmt command is a shell alias to a formatting tool for C style languages
@@ -129,6 +139,14 @@ au Filetype c,cpp,cf,java,arduino nmap <buffer> <C-c> ma:%!cfmt<CR>`a
 
 " Diff original file and buffer
 nmap <C-M-o> :Difforig<CR>:wincmd p<CR>
+
+" Insert result of an expression, like a calculation
+inoremap <C-f> <C-r>=
+
+" Autocorrect or autocomplete spelling and move to the end of a word.
+inoremap <silent> <C-s> <Esc>1z=ea
+" Open spelling suggestion menu
+inoremap <C-M-s> <C-x>s
 
 " Delete (Eliminate) the next word without saving to register
 inoremap <silent> <C-e> <C-o>"_de
@@ -141,15 +159,14 @@ inoremap <silent> <C-u> <C-G>u<C-U>
 " Similarly, to delete from cursor until the end of the line.
 inoremap <silent> <C-M-u> <C-o>D
 
-" Use Q for formatting.
-map Q gq
-
-" Set leader to comma instead of backslash
-let mapleader = ","
-
 "
 " Miscellaneous
 "
+
+" Use semi-persistent history.
+call mkdir("/tmp/nvim-1000/undo", "p", 0700)
+set undodir=/tmp/nvim-1000/undo
+set undofile
 
 " Disable default mode indicator (we have airline)
 set noshowmode
@@ -163,7 +180,7 @@ set suffixes+=.aux,.bbl,.blg,.brf,.cb,.dvi,.idx,.ilg,.ind,.inx,.jpg,.log,.out,.p
 set suffixes-=.h
 set suffixes-=.obj
 " For line-based features
-set formatoptions+=ro
+set formatoptions+=ron2l
 set textwidth=80
 
 " When on, the ":substitute" flag 'g' is default on.  This means that all
@@ -201,11 +218,6 @@ if !empty($DISPLAY)
     " Comments
     hi Comment gui=italic
 endif
-
-" Use semi-persistent history.
-call mkdir("/tmp/nvim-1000/undo", "p", 0700)
-set undodir=/tmp/nvim-1000/undo
-set undofile
 
 " Enable and configure spellcheck
 set spell

@@ -9,7 +9,7 @@ get_log_time ()
     stat -c %Y /var/log/pacman.log
 }
 
-# refresh polybar ipc
+# refresh polybar ipc if pacman operations have occurred
 if [ "$1" = "-r" ]; then
     while pgrep polybar; do
         log_time=$(get_log_time)
@@ -18,14 +18,14 @@ if [ "$1" = "-r" ]; then
             polybar-msg hook update-ipc 1
         fi
     done
-    exit 0
+    exit
 fi
 
 updates_repo=$(checkupdates | wc -l)
 updates_aur=$(paru -Qum | wc -l)
 
 if [ $(($updates_repo + $updates_aur)) -eq 0 ]; then
-    echo
+    printf '\n'
 else
-    echo "%{F#e60053}%{F-} $updates_repo   $updates_aur"
+    printf '%s %s   %s\n' "%{F#e60053}%{F-}" "$updates_repo" "$updates_aur"
 fi

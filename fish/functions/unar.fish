@@ -1,13 +1,10 @@
 # Original:
 # <https://github.com/stefanvanburen/dotfiles/blob/9e62163c674f3fef58a12d752daa78b4c5eeecbe/config.fish#L65-L125>
 
-function unar --description "Extract files from archives"
+function unar --wraps='tar' --description "Extract files from archives"
     # no arguments, write usage
     if [ (count $argv) -eq 0 ] || [ $argv[1] = "-h" ] || [ $argv[1] = "--help" ]
-        printf '%s\n' "Usage: unar [OPTION]... [FILE]..." >&2
-        printf '%s\n\n' "Extract files from archives." >&2
-        printf '%s\n' "Options:" >&2
-        printf '%s\n' "  -r, --remove    remove archive after unpacking" >&2
+        printf '%s\n' "-r, --remove    remove archive after unpacking"
         return
     end
 
@@ -22,8 +19,7 @@ function unar --description "Extract files from archives"
             continue
         end
 
-        set extension (string match -r ".*(\.[^\.]*)\$" $i)[2]
-        switch $extension
+        switch $i
             case '*.tar.gz' '*.tgz'
                 tar xv || tar zvxf "$i"
             case '*.tar.bz2' '*.tbz' '*.tbz2'
