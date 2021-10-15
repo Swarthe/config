@@ -228,7 +228,7 @@ ramp-load-7 = "%{F#f70064}%{F-}"
 [module/memory]
 type = internal/memory
 interval = 5
-label = %percentage_used%% %gb_used%
+label = "%percentage_used%%    %gb_used%"
 format = <ramp-used> <label>
 
 ramp-used-0 = 
@@ -245,7 +245,7 @@ type = internal/network
 interface = wlo1
 interval = 2
 
-label-connected = " %downspeed%   %upspeed%"
+label-connected = " %downspeed%    %upspeed%"
 label-disconnected = "%{F#f70064}%{F-} Disconnected"
 
 ;[module/wlan]
@@ -300,7 +300,7 @@ format-prefix = 
 format-prefix-foreground = ${colors.foreground-alt}
 
 ; Space before label is required for margin with prefix
-label = " %date%   %time%"
+label = "%time%    %date%"
 
 [module/cpu-temp]
 type = internal/temperature

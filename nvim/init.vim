@@ -128,9 +128,9 @@ nmap <silent> <A-j> :wincmd j<CR>
 nmap <silent> <A-h> :wincmd h<CR>
 nmap <silent> <A-l> :wincmd l<CR>
 
-nmap <silent> <C-j> :tabNext<cr>
-nmap <silent> <C-k> :tabnext<cr>
-nmap <silent> <C-l> :tablast<cr>
+nmap <silent> <C-j> :tabNext<CR>
+nmap <silent> <C-k> :tabnext<CR>
+nmap <silent> <C-l> :tablast<CR>
 nmap <silent> <C-h> :tabfirst<CR>
 
 " Automatically format Code and return to the previous absolute location
