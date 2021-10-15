@@ -110,6 +110,23 @@ floating_modifier $mod
 # start a terminal
 bindsym $mod+Return exec --no-startup-id i3-sensible-terminal
 
+# Resize window (you can also use the mouse for that)
+
+# Pressing left will shrink the window’s width.
+# Pressing right will grow the window’s width.
+# Pressing up will shrink the window’s height.
+# Pressing down will grow the window’s height.
+bindsym $sup+$left       resize grow width 10 px or 10 ppt
+bindsym $sup+$down       resize grow height 10 px or 10 ppt
+bindsym $sup+$up         resize shrink height 10 px or 10 ppt
+bindsym $sup+$right      resize shrink width 10 px or 10 ppt
+
+# same bindings, but for the arrow keys
+bindsym $sup+Left        resize grow width 10 px or 10 ppt
+bindsym $sup+Down        resize grow height 10 px or 10 ppt
+bindsym $sup+Up          resize shrink height 10 px or 10 ppt
+bindsym $sup+Right       resize shrink width 10 px or 10 ppt
+
 # Launch standalone graphical applications not designed for file operations (use
 # rofi or terminal for that)
 mode "Launch" {
@@ -147,33 +164,6 @@ mode "Quit" {
 
 bindsym $mod+q mode "Quit"
 
-# Resize window (you can also use the mouse for that)
-mode "Resize" {
-    # These bindings trigger as soon as you enter the resize mode
-
-    # Pressing left will shrink the window’s width.
-    # Pressing right will grow the window’s width.
-    # Pressing up will shrink the window’s height.
-    # Pressing down will grow the window’s height.
-    bindsym $left       resize shrink width 10 px or 10 ppt
-    bindsym $down       resize grow height 10 px or 10 ppt
-    bindsym $up         resize shrink height 10 px or 10 ppt
-    bindsym $right      resize grow width 10 px or 10 ppt
-
-    # same bindings, but for the arrow keys
-    bindsym Left        resize shrink width 10 px or 10 ppt
-    bindsym Down        resize grow height 10 px or 10 ppt
-    bindsym Up          resize shrink height 10 px or 10 ppt
-    bindsym Right       resize grow width 10 px or 10 ppt
-
-    # back to normal
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
-    bindsym $mod+r mode "default"
-}
-
-bindsym $mod+r mode "Resize"
-
 # take a screenshot (scot is a custom script from
 # <https://github.com/Swarthe/utility>)
 bindsym $mod+s --release exec --no-startup-id scot
@@ -185,6 +175,11 @@ bindsym $mod+$sup+Shift+s exec --no-startup-id scot -df
 bindsym $sup+r exec --no-startup-id rofi -show drun
 # Open files directly with rofi and file-browser-extended:
 bindsym $sup+space exec --no-startup-id rofi -show file-browser-extended
+# Drag and drop files with dragon and file-browser-extended
+# Works as expected with 'open multi' ('Alt+2' by default)
+bindsym $sup+Shift+space exec --no-startup-id \
+rofi -show file-browser-extended -file-browser-cmd \
+"dragon-drag-and-drop -x" -display-file-browser-extended "drag"
 # Window switcher with rofi
 bindsym $sup+Tab exec --no-startup-id rofi -show window
 # Clipboard with rofi and greenclip
@@ -196,11 +191,6 @@ bindsym $sup+q exec --no-startup-id "rofi \
 -theme-str \\"* { alternate-normal-background: @background; }\\" \
 -theme-str \\"listview { spacing: 0px; }\\" \
 -show query"
-# Drag and drop files with dragon and file-browser-extended
-# Works as expected with 'open multi' ('Alt+2' by default)
-bindsym $sup+d exec --no-startup-id \
-rofi -show file-browser-extended -file-browser-cmd \
-"dragon-drag-and-drop -x" -display-file-browser-extended "drag"
 
 # kill focused window (force ctrl+q)
 bindsym control+$sup+q kill

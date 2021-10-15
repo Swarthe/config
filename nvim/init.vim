@@ -201,7 +201,7 @@ if !empty($DISPLAY)
     " Visual selection
     hi Visual guibg=#555555
     " Search highlight colour (gold is more pleasant)
-    hi Search guibg=#eec600 guifg=black
+    hi Search guibg=#ffc000 guifg=black
     " Pop-up menu
     hi Pmenu guibg=#4b5162
     hi PmenuSel guibg=#63a5f3 guifg=#000000
@@ -216,8 +216,10 @@ if !empty($DISPLAY)
     hi VertSplit guifg=#3e4452 guibg=#3e4452
     hi StatusLineNC guifg=#3e4452
     hi Statusline guifg=#3e4452
-    " Comments
+    " Comments should be in italics
     hi Comment gui=italic
+    " Brighter gold and italics for TODO
+    hi Todo guibg=#ffd700 gui=italic
 endif
 
 " Enable and configure spellcheck
