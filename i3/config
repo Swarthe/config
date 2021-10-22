@@ -116,16 +116,16 @@ bindsym $mod+Return exec --no-startup-id kitty
 # Pressing right will grow the window’s width.
 # Pressing up will shrink the window’s height.
 # Pressing down will grow the window’s height.
-bindsym $sup+$left      resize grow width 10 px or 10 ppt
+bindsym $sup+$left      resize shrink width 10 px or 10 ppt
 bindsym $sup+$down      resize grow height 10 px or 10 ppt
 bindsym $sup+$up        resize shrink height 10 px or 10 ppt
-bindsym $sup+$right     resize shrink width 10 px or 10 ppt
+bindsym $sup+$right     resize grow width 10 px or 10 ppt
 
 # same bindings, but for the arrow keys
-bindsym $sup+Left       resize grow width 10 px or 10 ppt
+bindsym $sup+Left       resize shrink width 10 px or 10 ppt
 bindsym $sup+Down       resize grow height 10 px or 10 ppt
 bindsym $sup+Up         resize shrink height 10 px or 10 ppt
-bindsym $sup+Right      resize shrink width 10 px or 10 ppt
+bindsym $sup+Right      resize grow width 10 px or 10 ppt
 
 # Launch standalone graphical applications not designed for file operations (use
 # rofi or terminal for that)
@@ -171,6 +171,8 @@ bindsym $mod+Shift+s --release exec --no-startup-id scot -f
 bindsym $mod+$sup+s exec --no-startup-id scot -d
 bindsym $mod+$sup+Shift+s exec --no-startup-id scot -df
 
+# Rofi
+
 # Run graphical applications with rofi
 bindsym $sup+r exec --no-startup-id rofi -show drun
 # Open files directly with rofi and file-browser-extended:
@@ -183,7 +185,7 @@ rofi -show file-browser-extended -file-browser-cmd \
 # Window switcher with rofi
 bindsym $sup+Tab exec --no-startup-id rofi -show window
 # Clipboard with rofi and greenclip
-bindsym $sup+c exec --no-startup-id rofi -show clipboard
+bindsym $sup+c exec --no-startup-id rofi -show clip
 # Query the internet with tweaked rofi and tuxi
 bindsym $sup+q exec --no-startup-id "rofi \
 -theme-str \\"* { selected-normal-background: @background; }\\" \
@@ -191,6 +193,12 @@ bindsym $sup+q exec --no-startup-id "rofi \
 -theme-str \\"* { alternate-normal-background: @background; }\\" \
 -theme-str \\"listview { spacing: 0px; }\\" \
 -show query"
+# Manager notifications with rofi and Dunst
+bindsym $sup+d exec --no-startup-id dunstctl context
+
+# Manager notifications with Dunst
+bindsym $mod+Tab        exec --no-startup-id dunstctl history-pop
+bindsym $mod+Shift+Tab  exec --no-startup-id dunstctl close-all
 
 # kill focused window (force ctrl+q)
 bindsym control+$sup+q kill

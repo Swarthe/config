@@ -10,7 +10,7 @@ set -gx LESSHISTFILE        "$XDG_DATA_HOME/less/less.hist"
 
 set -gx BACKUP_TARGET       "/mnt/erratic-pulse/"
 set -gx SCOT_TARGET         "$HOME/transient/"
-set -gx SCOT_GRAPHICAL      "1"
+set -gx UTILITY_GRAPHICAL   "1"
 
 set -gx BROWSER             "firefox"
 set -gx DIFFPROG            "nvim -d"

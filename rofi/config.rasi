@@ -1,5 +1,5 @@
 configuration {
-modi: "combi,window,drun,file-browser-extended,clipboard:greenclip print,query:tuxi -rq";
+modi: "combi,window,drun,file-browser-extended,clip:greenclip print,query:tuxi -rq";
 /*	width: 50;*/
 /*	lines: 15;*/
 /*	columns: 1;*/

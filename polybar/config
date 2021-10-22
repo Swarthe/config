@@ -296,11 +296,11 @@ date = "%a %d %b"
 ;time-alt =
 ;date-alt = " %a, %d %b"
 
-format-prefix = 
+format-prefix = 
 format-prefix-foreground = ${colors.foreground-alt}
 
 ; Space before label is required for margin with prefix
-label = "%time%    %date%"
+label = " %date%    %time%"
 
 [module/cpu-temp]
 type = internal/temperature

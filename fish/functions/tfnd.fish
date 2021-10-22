@@ -1,3 +1,3 @@
-function tfnd --wraps='grep' --description 'Fuzzy text search'
-  grep -Iri $argv .;
+function rg --wraps='grep' --description 'Fuzzy text search'
+  grep -Iri $argv
 end

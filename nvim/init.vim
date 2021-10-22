@@ -19,7 +19,6 @@ call plug#begin('/opt/nvim-plug')
     Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
         " 9000+ Snippets
         Plug 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
-    Plug 'jiangmiao/auto-pairs'
     " Improved markdown lists
     Plug 'dkarter/bullets.vim'
     Plug 'Konfekt/vim-DetectSpellLang'
@@ -70,27 +69,6 @@ let g:coq_settings = {
     \ 'keymap.jump_to_mark'         : "<c-q>"
     \ }                               " Default <c-h> breaks for us
 
-" auto-pairs
-" Change or disable all unnecessary insert mode shortcuts
-let g:AutoPairsShortcutFastWrap = ''
-"let g:AutoPairsShortcutJump = ''                " <M-n>
-let g:AutoPairsShortcutBackInsert = ''
-" Disable unneeded options
-let g:AutoPairsMapCh = '0'
-let g:AutoPairsCenterLine = '0'
-let g:AutoPairsMapSpace = '0'
-" Tweak pairs for markdown files
-au Filetype markdown let b:AutoPairs = { '(':')',
-                                     \   '[':']',
-                                     \   '{':'}',
-                                     \   "'":"'",
-                                     \   '"':'"',
-                                     \   '`':'`',
-                                     \ '```':'```',
-                                     \   '*':'*',
-                                     \  '**':'**'
-                                     \ }
-
 " vim-DetectSpellLang
 let g:detectspelllang_langs = {
     \ 'hunspell': [ 'en_GB', 'fr_FR', 'da_DK', 'en_US' ],
@@ -111,9 +89,6 @@ nmap <silent> <C-M-p> <Plug>MarkdownPreviewStop
 nnoremap <silent> <C-n> :NERDTreeFind<CR>
 nnoremap <silent> <C-M-n> :NERDTreeToggle<CR>
 
-" auto-pairs
-let g:AutoPairsShortcutToggle = '<C-M-b>'       " For Brackets
-
 " Internal
 
 " Set leader to comma instead of backslash
@@ -123,10 +98,10 @@ let mapleader = ","
 map Q gq
 
 " Split window and tab shortcuts
-nmap <silent> <A-k> :wincmd k<CR>
-nmap <silent> <A-j> :wincmd j<CR>
-nmap <silent> <A-h> :wincmd h<CR>
-nmap <silent> <A-l> :wincmd l<CR>
+nmap <silent> <C-M-k> :wincmd k<CR>
+nmap <silent> <C-M-j> :wincmd j<CR>
+nmap <silent> <C-M-h> :wincmd h<CR>
+nmap <silent> <C-M-l> :wincmd l<CR>
 
 nmap <silent> <C-j> :tabNext<CR>
 nmap <silent> <C-k> :tabnext<CR>
@@ -136,7 +111,7 @@ nmap <silent> <C-h> :tabfirst<CR>
 " Automatically format Code and return to the previous absolute location
 " (the cfmt command is a shell alias to a formatting tool for C style languages
 " in this case).
-au Filetype c,cpp,cf,java,arduino nmap <buffer> <C-c> ma:%!cfmt<CR>`a
+au Filetype c,cpp,cf,java,arduino nmap <buffer> <C-c> mp:%!cfmt<CR>`p
 
 " Diff original file and buffer
 nmap <C-M-o> :Difforig<CR>:wincmd p<CR>
