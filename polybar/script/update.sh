@@ -1,7 +1,7 @@
 #!/usr/bin/sh
 #
-# update.sh: Show number of available package updates from the official
-#            repositories and AUR
+# update.sh: Show number of available package updates using paru and
+#            checkupdates
 #
 
 get_log_time ()
@@ -10,8 +10,8 @@ get_log_time ()
 }
 
 # refresh polybar ipc if pacman operations have occurred
-if [ "$1" = "-r" ]; then
-    while pgrep polybar; do
+if [ "$1" = '-r' ]; then
+    while pgrep -u "$USER" polybar; do
         log_time=$(get_log_time)
         sleep 5
         if [ $log_time -ne $(get_log_time) ]; then

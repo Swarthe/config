@@ -1,12 +1,10 @@
-# i3 config file (v4)
+# i3 config file
 #
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 #
 # This config file uses keycodes (bindsym) and was written for the QWERTY
 # layout.
 #
-# To get a config file with the same key positions, but for your current
-# layout, use the i3-config-wizard
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
@@ -16,27 +14,18 @@ font xft:Noto Sans Medium 8
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
 #font pango:DejaVu Sans Mono 8
 
-# The combination of xss-lock, nm-applet and pactl is a popular choice, so
-# they are included here as an example. Modify as you see fit.
-
 # Disable X automatically turning off display
 exec --no-startup-id xset s off
 exec --no-startup-id xset -dpms
 exec --no-startup-id xset s noblank
 
-# Background image path
-set $bg_path $HOME/image/selection/good/background
+# Support scripts path
+set $script $XDG_CONFIG_HOME/i3/script
 
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
 exec_always --no-startup-id killall -q xss-lock; \
-xss-lock --transfer-sleep-lock -- i3lock --nofork --indicator --clock --fill \
---greeter-text="$USER" --time-str='%H:%M' --date-str='%a %d %b' \
---verif-text="Verifying..." --wrong-text="Incorrect!" --noinput-text="No Input" \
---{date,time,greeter}-color=ffeeeeee --ring-width 5 --color=00000000 \
---image=$(find $bg_path/spatial/ -type f | shuf -n 1) \
---ring-color=2062b0 --ringver-color=009900 --keyhl-color=63a5f3 \
---insidever-color=009900ff
+xss-lock --transfer-sleep-lock -- $script/lock.sh
 
 # set background with feh
 exec_always --no-startup-id feh --no-fehbg --bg-fill --randomize \
@@ -46,10 +35,6 @@ $bg_path/surreal
 exec_always --no-startup-id killall -q xidlehook; xidlehook \
 --detect-sleep --not-when-audio \
 --timer 300 "loginctl lock-session" "" --timer 1500 "systemctl suspend" ""
-
-# NetworkManager is the most popular way to manage wireless networks on Linux,
-# and nm-applet is a desktop environment-independent system tray GUI for it.
-#exec --no-startup-id nm-applet
 
 # $mod = Wind0ws key (used for almost everything), $sup = Alt (used for rofi and
 # alternate shortcuts)
@@ -62,6 +47,7 @@ set $sup Mod1
 
 # The shift modifier here usually determines whether the operation will apply to
 # the latest or all players, and $sup the extent of operation
+
 # Use pactl to control volume in PulseAudio.
 bindsym $mod+period exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10%
 bindsym $mod+comma exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10%
@@ -177,22 +163,15 @@ bindsym $mod+$sup+Shift+s exec --no-startup-id scot -df
 bindsym $sup+r exec --no-startup-id rofi -show drun
 # Open files directly with rofi and file-browser-extended:
 bindsym $sup+space exec --no-startup-id rofi -show file-browser-extended
-# Drag and drop files with dragon and file-browser-extended
+# Drag and drop files
 # Works as expected with 'open multi' ('Alt+2' by default)
-bindsym $sup+Shift+space exec --no-startup-id \
-rofi -show file-browser-extended -file-browser-cmd \
-"dragon-drag-and-drop -x" -display-file-browser-extended "drag"
+bindsym $sup+Shift+space exec --no-startup-id $script/menu.sh -d
 # Window switcher with rofi
 bindsym $sup+Tab exec --no-startup-id rofi -show window
 # Clipboard with rofi and greenclip
 bindsym $sup+c exec --no-startup-id rofi -show clip
-# Query the internet with tweaked rofi and tuxi
-bindsym $sup+q exec --no-startup-id "rofi \
--theme-str \\"* { selected-normal-background: @background; }\\" \
--theme-str \\"* { selected-normal-foreground: @foreground; }\\" \
--theme-str \\"* { alternate-normal-background: @background; }\\" \
--theme-str \\"listview { spacing: 0px; }\\" \
--show query"
+# Query the internet
+bindsym $sup+q exec --no-startup-id $script/menu.sh -q
 # Manager notifications with rofi and Dunst
 bindsym $sup+d exec --no-startup-id dunstctl context
 
@@ -303,7 +282,7 @@ bindsym $mod+Shift+e exec --no-startup-id "i3-nagbar -t warning \
 -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' \
 -B 'Yes, exit i3' 'i3-msg exit'"
 # lock (Exit) the display
-bindsym $mod+e exec --no-startup-id "loginctl lock-session"
+bindsym $mod+e exec --no-startup-id loginctl lock-session
 
 # Disable window titlebars and borders entirely
 for_window [class="^.*"] border pixel 0

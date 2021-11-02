@@ -1,4 +1,4 @@
-# Universal variables
+# Global variables
 set -gx XDG_CACHE_HOME      "$HOME/.cache"
 set -gx XDG_CONFIG_HOME     "$HOME/.config"
 set -gx XDG_DATA_HOME       "$HOME/.local/share"
@@ -8,14 +8,15 @@ set -gx GTK2_RC_FILES       "$XDG_CONFIG_HOME/gtk-2.0/gtkrc"
 set -gx PARALLEL_HOME       "$XDG_CONFIG_HOME/parallel"
 set -gx LESSHISTFILE        "$XDG_DATA_HOME/less/less.hist"
 
-set -gx BACKUP_TARGET       "/mnt/erratic-pulse/"
-set -gx SCOT_TARGET         "$HOME/transient/"
-set -gx UTILITY_GRAPHICAL   "1"
-
 set -gx BROWSER             "firefox"
 set -gx DIFFPROG            "nvim -d"
 set -gx EDITOR              "nvim"
 set -gx PAGER               "less"
+
+set -gx BACKUP_TARGET       "/mnt/erratic-pulse"
+set -gx BACKUP_LINK_DIR     "/mnt/five-pebbles"
+set -gx SCOT_TARGET         "$HOME/transient"
+set -gx UTILITY_GRAPHICAL   "1"
 
 set -gx GTK_THEME           "Arc-Dark"
 

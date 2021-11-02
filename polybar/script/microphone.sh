@@ -1,6 +1,6 @@
 #!/usr/bin/sh
 #
-# microphone.sh: Show status of the microphone
+# microphone.sh: Show the status of the microphone using pactl
 #
 
 is_muted ()

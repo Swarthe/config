@@ -120,7 +120,7 @@ nmap <C-M-o> :Difforig<CR>:wincmd p<CR>
 inoremap <C-f> <C-r>=
 
 " Autocorrect or autocomplete spelling and move to the end of a word.
-inoremap <silent> <C-s> <Esc>1z=ea
+inoremap <silent> <C-s> <Esc>1z=Ea
 " Open spelling suggestion menu
 inoremap <C-M-s> <C-x>s
 

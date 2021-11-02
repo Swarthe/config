@@ -1,6 +1,6 @@
 #!/usr/bin/sh
 #
-# media.sh: Show MPRIS media status
+# media.sh: Show MPRIS media status using playerctl
 #
 
 printf_media ()
