@@ -1,0 +1,10 @@
+[user]
+	email = emil.a.overbeck@gmail.com
+	name = Emil Overbeck
+	signingkey = BA3FF52C1674BE92
+[init]
+	defaultBranch = main
+[commit]
+	gpgSign = true
+[tag]
+	gpgSign = true

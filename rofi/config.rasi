@@ -57,7 +57,6 @@ display-drun: "run";
 /*	window-format: "{w}    {c}   {t}";*/
 /*	click-to-exit: true;*/
 /*	show-match: true;*/
-theme:"Arc-Dark-custom" ;
 /*	color-normal: ;*/
 /*	color-urgent: ;*/
 /*	color-active: ;*/
@@ -152,3 +151,5 @@ cache-dir: "/home/overbeck/.local/share/rofi/";
 /*	me-accept-entry: "MouseDPrimary";*/
 /*	me-accept-custom: "Control+MouseDPrimary";*/
 }
+
+@theme "Arc-Dark-custom"

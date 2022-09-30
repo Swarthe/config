@@ -4,31 +4,99 @@
 
 " Plugins with nvim-plug
 call plug#begin('/opt/nvim-plug')
-    Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+    Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() },
+         \ 'for': ['markdown', 'vim-plug']}
     " Latex integration
     Plug 'lervag/vimtex', { 'for': ['tex']}
     " Status bar
     Plug 'vim-airline/vim-airline'
     " File browser
     Plug 'preservim/nerdtree'
-        " Git status flags
-        Plug 'Xuyuanp/nerdtree-git-plugin'
     " Git client
     Plug 'tpope/vim-fugitive'
+    " LSP
+    Plug 'neovim/nvim-lspconfig'
     " Autocomplete suggestions
     Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
         " 9000+ Snippets
         Plug 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
     " Improved markdown lists
     Plug 'dkarter/bullets.vim'
+    " Automatic language detection
     Plug 'Konfekt/vim-DetectSpellLang'
+    " Automatic punctuation pairs
+    Plug 'jiangmiao/auto-pairs'
 call plug#end()
+
+" COQ
+let g:coq_settings = {
+    \ 'auto_start'                  : 'shut-up',
+    \ 'match.unifying_chars'        : ["_"],
+    \ 'display.ghost_text.context'  : [ " ", ""],
+    \ 'keymap.jump_to_mark'         : "<c-q>"
+    \ }                               " Default <c-h> breaks for us
+
+" LSP and keybinds
+lua << EOF
+local lsp = require 'lspconfig'
+local coq = require 'coq'
+
+-- Use an on_attach function to only map the following keys
+-- after the language server attaches to the current buffer
+local on_attach = function(client, bufnr)
+  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+  -- Enable completion triggered by <c-x><c-o>
+  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+  -- Mappings.
+  local opts = { noremap=true, silent=true }
+
+  -- See `:help vim.lsp.*` for documentation on any of the below functions
+  buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+  buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+  buf_set_keymap('n', '<M-K>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+  buf_set_keymap('n', '<leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+  buf_set_keymap('n', '<leader>c', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+  buf_set_keymap('n', '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
+  buf_set_keymap('n', '<leader>[', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
+  buf_set_keymap('n', '<leader>]', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
+  buf_set_keymap('n', '<leader>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
+  buf_set_keymap('n', '<leader>s', '<cmd>ClangdSwitchSourceHeader<CR>', opts)
+
+  buf_set_keymap('n', '<C-l>', '<cmd> LspStart<CR>', opts)
+  -- 'LspStop' is broken for us
+  buf_set_keymap('n', '<C-M-l>', '<cmd>lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>', opts)
+end
+
+-- Use a loop to conveniently call 'setup' on multiple servers and
+-- map buffer local keybindings when the language server attaches
+local servers = { 'clangd', 'texlab', 'rust_analyzer' }
+for _, srv in ipairs(servers) do
+  lsp[srv].setup(coq.lsp_ensure_capabilities({
+    on_attach = on_attach,
+    flags = {
+      debounce_text_changes = 150,
+    }
+  }))
+end
+EOF
+
+" vimtex
+let g:tex_flavor='latex'
+let g:tex_conceal='abdmgs'
+" Disable continuous compilation because we don't have a supported pdf viewer
+let g:vimtex_compiler_latexmk = {'continuous': 0}
+let maplocalleader = " "
 
 " airline
 let g:airline_theme='onedark'
 "let g:airline_powerline_fonts = 1
 
-" Configure markdown-preview
+" markdown-preview
 " options for markdown render
 "   middle: mean the cursor position always show at the middle of the preview
 "           page
@@ -51,23 +119,10 @@ au BufEnter * if winnr('$') == 1 && exists('b:NERDTree')
     \ && b:NERDTree.isTabTree() | quit | endif
 " Start NERDTree when Vim is started without file arguments.
 au StdinReadPre * let s:std_in=1
-au VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | wincmd p | endif
+au VimEnter * if argc() == 0 && !exists('s:std_in')
+                                \ | NERDTree | wincmd p | endif
 " Make NERDTree prettier
 let NERDTreeMinimalUI = 1
-
-" nerdtree-git-plugin
-" This plugin only works nvim is run inside a git directory
-let g:NERDTreeGitStatusShowClean = 0
-" This option completely breaks nerdtree-git-plugin
-"let g:nerdtreegitstatusconcealbrackets = 1
-
-" COQ
-let g:coq_settings = {
-    \ 'auto_start'                  : 'shut-up',
-    \ 'match.unifying_chars'        : ["_"],
-    \ 'display.ghost_text.context'  : [ " ", ""],
-    \ 'keymap.jump_to_mark'         : "<c-q>"
-    \ }                               " Default <c-h> breaks for us
 
 " vim-DetectSpellLang
 let g:detectspelllang_langs = {
@@ -75,11 +130,45 @@ let g:detectspelllang_langs = {
     \ 'aspell'  : [ 'en_GB', 'fr_FR', 'da_DK', 'en_US' ],
     \ }
 
-"
-" Keybind
-"
+" auto-pairs
+" Change or disable all unnecessary insert mode shortcuts
+let g:AutoPairsShortcutFastWrap = ''
+"let g:AutoPairsShortcutJump = ''   " <M-n>
+let g:AutoPairsShortcutBackInsert = ''
+" Disable unneeded options
+let g:AutoPairsMapCh = 0
+let g:AutoPairsCenterLine = 0
+let g:AutoPairsMultilineClose = 0
+" Tweak pairs for filetypes
+au Filetype markdown let b:AutoPairs = { '(':')',
+                                     \   '[':']',
+                                     \   '{':'}',
+                                     \   "'":"'",
+                                     \   '"':'"',
+                                     \   '`':'`',
+                                     \ '```':'```',
+                                     \   '*':'*',
+                                     \  '**':'**' }
+au Filetype c,cpp,objc,objcpp,cf,java,arduino
+    \ let b:AutoPairs = { '(':')',
+                      \   '[':']',
+                      \   '{':'}',
+                      \   "'":"'",
+                      \   '"':'"',
+                      \   "`":"`",
+                      \  '/*':'*/' }
+au Filetype tex
+    \ let b:AutoPairs = { '(':')',
+                      \   '[':']',
+                      \   '{':'}',
+                      \   "'":"'",
+                      \   '"':'"',
+                      \   "`":"`",
+                      \   '$':'$' }
 
-" Plugin
+"
+" Plugin keybindings
+"
 
 " markdown-preview
 nmap <silent> <C-p> <Plug>MarkdownPreviewToggle
@@ -89,10 +178,16 @@ nmap <silent> <C-M-p> <Plug>MarkdownPreviewStop
 nnoremap <silent> <C-n> :NERDTreeFind<CR>
 nnoremap <silent> <C-M-n> :NERDTreeToggle<CR>
 
-" Internal
+" auto-pairs
+let g:AutoPairsShortcutToggle = '<C-M-a>'   " Toggle Auto-pairs
 
-" Set leader to comma instead of backslash
-let mapleader = ","
+"
+" Internal keybindings
+"
+
+" Swap backslash and space for leader
+let mapleader = " "
+nmap <bslash> <space>
 
 " Use Q for formatting.
 map Q gq
@@ -109,9 +204,11 @@ nmap <silent> <C-l> :tablast<CR>
 nmap <silent> <C-h> :tabfirst<CR>
 
 " Automatically format Code and return to the previous absolute location
-" (the cfmt command is a shell alias to a formatting tool for C style languages
-" in this case).
-au Filetype c,cpp,cf,java,arduino nmap <buffer> <C-c> mp:%!cfmt<CR>`p
+" (the cfmt command is a shell alias to a formatting tool for C style languages.
+au Filetype c,cpp,objc,objcpp,cf,java,arduino
+    \ nmap <buffer> <C-c> m`:%!cfmt<CR>``zz<CR>
+au Filetype rust
+    \ nmap <buffer> <C-c> m`:%!rustfmt<CR>``zz<CR>
 
 " Diff original file and buffer
 nmap <C-M-o> :Difforig<CR>:wincmd p<CR>
@@ -119,9 +216,9 @@ nmap <C-M-o> :Difforig<CR>:wincmd p<CR>
 " Insert result of an expression, like a calculation
 inoremap <C-f> <C-r>=
 
-" Autocorrect or autocomplete spelling and move to the end of a word.
-inoremap <silent> <C-s> <Esc>1z=Ea
-" Open spelling suggestion menu
+" Autocorrect previous misspelling and move back to previous cursor position.
+inoremap <silent> <C-s> <c-g>u<Esc>[s1z=`]a<c-g>u
+" Open spelling suggestion menu on current word
 inoremap <C-M-s> <C-x>s
 
 " Delete (Eliminate) the next word without saving to register
@@ -135,46 +232,30 @@ inoremap <silent> <C-u> <C-G>u<C-U>
 " Similarly, to delete from cursor until the end of the line.
 inoremap <silent> <C-M-u> <C-o>D
 
+" Prevent omnifunc from opening preview window
+set completeopt-=preview
+
 "
-" Miscellaneous
+" Visual
 "
 
-" Use semi-persistent history.
-call mkdir("/tmp/nvim-1000/undo", "p", 0700)
-set undodir=/tmp/nvim-1000/undo
-set undofile
-
-" Disable default mode indicator (we have airline)
-set noshowmode
-
-" Show a few lines of context around the cursor.  Note that this makes the
-" text scroll if you mouse-click near the start or end of the window.
-set scrolloff=5
-
-" Filetype and format configuration
-set suffixes+=.aux,.bbl,.blg,.brf,.cb,.dvi,.idx,.ilg,.ind,.inx,.jpg,.log,.out,.png,.toc
-set suffixes-=.h
-set suffixes-=.obj
-" For line-based features
-set formatoptions+=ron2l
-set textwidth=80
-
-" When on, the ":substitute" flag 'g' is default on.  This means that all
-" matches in a line are substituted instead of one.
-set gdefault
-
-" Highlight the 81st non-whitespace character on all lines
+" Highlight the 81st and over non-whitespace character on all lines
 hi Over80Chars ctermbg=red guibg=DarkRed
 let w:m1=matchadd('Over80Chars', '\%>80v.\+', -1)
 " Highlight trailing whitespace when not in insert mode on or after it.
 hi ExtraWhitespace ctermbg=red guibg=Red
 match ExtraWhitespace /\s\+\%#\@<!$/
 
+" Automatically render some symbols and markup (useful for latex and markdown)
+set conceallevel=1
+
 " Improve colours if not in TTY (Arc-Dark inspired theme)
 if !empty($DISPLAY)
     set termguicolors
     " Visual selection
-    hi Visual guibg=#555555
+    hi Visual guibg=#4c5263
+    " Concealed text
+    hi Conceal guibg=#3c4253
     " Search highlight colour (gold is more pleasant)
     hi Search guibg=#ffc000 guifg=black
     " Pop-up menu
@@ -193,9 +274,40 @@ if !empty($DISPLAY)
     hi Statusline guifg=#3e4452
     " Comments should be in italics
     hi Comment gui=italic
-    " Brighter gold and italics for TODO
+    " Brighter gold and italics for TODO and similar special words
     hi Todo guibg=#ffd700 gui=italic
+    " 'gutter' used by LSP
+    hi SignColumn guibg=NONE ctermbg=NONE
 endif
+
+"
+" Miscellaneous
+"
+
+" Use semi-persistent history.
+call mkdir("/tmp/nvim-1000/undo", "p", 0700)
+set undodir=/tmp/nvim-1000/undo
+set undofile
+
+" Disable default mode indicator (we have airline)
+set noshowmode
+
+" Show a few lines of context around the cursor.  Note that this makes the
+" text scroll if you mouse-click near the start or end of the window.
+set scrolloff=5
+
+" Filetype and format configuration
+set suffixes+=.aux,.bbl,.blg,.brf,.cb,.dvi,.idx,.ilg,.ind,.inx,.jpg,.log,.out,
+              \.png,.toc
+set suffixes-=.h
+set suffixes-=.obj
+" For line-based features
+set formatoptions+=ron2l
+set textwidth=80
+
+" When on, the ":substitute" flag 'g' is default on.  This means that all
+" matches in a line are substituted instead of one.
+set gdefault
 
 " Enable and configure spellcheck
 set spell
@@ -230,6 +342,8 @@ set smartindent
 " Every wrapped line will continue visually indented (same amount of space as
 " the beginning of that line)
 set breakindent
+" Place case labels at the indent level of the switch statement
+set cino=:0
 
 " When 'confirm' is on, certain operations that would normally fail because of
 " unsaved changes to a buffer, e.g. ":q" and ":e", instead raise a dialog asking
@@ -256,8 +370,5 @@ au BufReadPost *
 
 " Convenient command to see the difference between the current buffer and the
 " file it was loaded from, thus the changes you made.
-" Only define it when not defined already.
-" Revert with: ":delcommand Difforig".
 command Difforig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
     \ | wincmd p | diffthis
-

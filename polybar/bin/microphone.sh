@@ -5,9 +5,7 @@
 
 is_muted ()
 {
-    pactl list sources \
-        | grep -FA 10 alsa_input.usb-SteelSeries_SteelSeries_Arctis_7-00.mono-chat \
-        | grep -Fq "Mute: yes"
+   pactl get-source-mute @DEFAULT_SOURCE@ | grep -Fq yes
 }
 
 is_used ()

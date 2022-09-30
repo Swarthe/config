@@ -1,3 +1,3 @@
 function shrd --wraps='shred -uz' --description 'alias shrd=shred -uz'
-  shred -uz $argv;
+  shred -uzn 7 $argv;
 end

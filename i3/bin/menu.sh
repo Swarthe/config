@@ -1,6 +1,6 @@
 #!/usr/bin/sh
 #
-# menu.sh: Show various menus with rofi
+# menu.sh: Show various complex menus with rofi
 #
 
 if [ "$1" = '-q' ]; then
@@ -13,5 +13,5 @@ if [ "$1" = '-q' ]; then
 elif [ "$1" = '-d' ]; then
     # Drag and drop files with dragon and file-browser-extended
     rofi -show file-browser-extended -file-browser-cmd \
-    'dragon-drag-and-drop -x' -display-file-browser-extended 'drag'
+    'dragon-drop -x' -display-file-browser-extended 'drag'
 fi
