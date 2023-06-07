@@ -39,15 +39,15 @@ set $sup Mod4
 set $meta Mod1
 
 #
-# Media management
+# Audio management
 #
 
 # The shift modifier here usually determines whether the operation will apply to
 # the latest or all players, and $meta the extent of operation
 
 # Use pactl to control volume in PulseAudio.
-bindsym $sup+period exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10%
-bindsym $sup+comma exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10%
+bindsym $sup+period exec --no-startup-id $bin/volume.sh +10%
+bindsym $sup+comma exec --no-startup-id $bin/volume.sh -10%
 
 # Switch Player
 bindsym $sup+backslash exec --no-startup-id playerctld shift
@@ -58,6 +58,10 @@ bindsym $sup+Shift+period exec --no-startup-id playerctl volume 0.1+
 bindsym $sup+Shift+comma exec --no-startup-id playerctl volume 0.1-
 bindsym $sup+slash exec --no-startup-id playerctl volume 1
 bindsym $sup+Shift+slash exec --no-startup-id playerctl volume 0
+
+#
+# Media management
+#
 
 # Mute sound or microphone
 bindsym $sup+m exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
@@ -116,7 +120,6 @@ bindsym $meta+Right      resize grow width 10 px or 10 ppt
 # operations)
 mode "Launch" {
     # These bindings trigger as soon as you enter the launch mode
-    bindsym f exec                      firefox;            mode "default"
     bindsym d exec --no-startup-id      discord;            mode "default"
     bindsym e exec                      easyeffects;        mode "default"
     bindsym s exec --no-startup-id      steam;              mode "default"

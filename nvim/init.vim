@@ -26,6 +26,8 @@ call plug#begin('/opt/nvim-plug')
     Plug 'Konfekt/vim-DetectSpellLang'
     " Automatic punctuation pairs
     Plug 'jiangmiao/auto-pairs'
+    " Improved Rust syntax highlighting and features
+    Plug 'rust-lang/rust.vim'
 call plug#end()
 
 " COQ
@@ -33,7 +35,7 @@ let g:coq_settings = {
     \ 'auto_start'                  : 'shut-up',
     \ 'match.unifying_chars'        : ["_"],
     \ 'display.ghost_text.context'  : [ " ", ""],
-    \ 'keymap.jump_to_mark'         : "<c-q>"
+    \ 'keymap.jump_to_mark'          : "<c-q>"
     \ }                               " Default <c-h> breaks for us
 
 " LSP and keybinds
@@ -59,9 +61,9 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
   buf_set_keymap('n', '<M-K>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
   buf_set_keymap('n', '<leader>r', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  buf_set_keymap('n', '<leader>c', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+  buf_set_keymap('n', '<leader>a', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
   buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-  buf_set_keymap('n', '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
+  buf_set_keymap('n', '<leader>o', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
   buf_set_keymap('n', '<leader>[', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
   buf_set_keymap('n', '<leader>]', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
   buf_set_keymap('n', '<leader>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
@@ -140,31 +142,19 @@ let g:AutoPairsMapCh = 0
 let g:AutoPairsCenterLine = 0
 let g:AutoPairsMultilineClose = 0
 " Tweak pairs for filetypes
-au Filetype markdown let b:AutoPairs = { '(':')',
-                                     \   '[':']',
-                                     \   '{':'}',
-                                     \   "'":"'",
-                                     \   '"':'"',
-                                     \   '`':'`',
-                                     \ '```':'```',
-                                     \   '*':'*',
-                                     \  '**':'**' }
+au Filetype markdown
+    \ let b:AutoPairs = AutoPairsDefine({ '*':'*', '**':'**', '$':'$', '$$':'$$'})
 au Filetype c,cpp,objc,objcpp,cf,java,arduino
-    \ let b:AutoPairs = { '(':')',
-                      \   '[':']',
-                      \   '{':'}',
-                      \   "'":"'",
-                      \   '"':'"',
-                      \   "`":"`",
-                      \  '/*':'*/' }
+    \ let b:AutoPairs = AutoPairsDefine({ '/*':'*/' })
+au Filetype rust
+    \ let b:AutoPairs = AutoPairsDefine({ '/*':'*/', '/**':'**/', '\[(]\zs|':'|' }) |
+    \ setlocal cino+=:0,m1,(4    " Necessary to override `rust.vim`
 au Filetype tex
-    \ let b:AutoPairs = { '(':')',
-                      \   '[':']',
-                      \   '{':'}',
-                      \   "'":"'",
-                      \   '"':'"',
-                      \   "`":"`",
-                      \   '$':'$' }
+    \ let b:AutoPairs = AutoPairsDefine({ '$':'$' })
+
+" Bullets
+" Disable letters for nested lists, as it is not standard markdown.
+let g:bullets_outline_levels = ['num']
 
 "
 " Plugin keybindings
@@ -179,7 +169,7 @@ nnoremap <silent> <C-n> :NERDTreeFind<CR>
 nnoremap <silent> <C-M-n> :NERDTreeToggle<CR>
 
 " auto-pairs
-let g:AutoPairsShortcutToggle = '<C-M-a>'   " Toggle Auto-pairs
+let g:AutoPairsShortcutToggle = '<C-M-p>'   " Toggle Auto-pairs
 
 "
 " Internal keybindings
@@ -208,7 +198,7 @@ nmap <silent> <C-h> :tabfirst<CR>
 au Filetype c,cpp,objc,objcpp,cf,java,arduino
     \ nmap <buffer> <C-c> m`:%!cfmt<CR>``zz<CR>
 au Filetype rust
-    \ nmap <buffer> <C-c> m`:%!rustfmt<CR>``zz<CR>
+    \ nmap <buffer> <C-c> m`:%!rustfmt --edition 2021<CR>``zz<CR>
 
 " Diff original file and buffer
 nmap <C-M-o> :Difforig<CR>:wincmd p<CR>
@@ -274,6 +264,7 @@ if !empty($DISPLAY)
     hi Statusline guifg=#3e4452
     " Comments should be in italics
     hi Comment gui=italic
+    hi SpecialComment gui=italic guifg=Orange
     " Brighter gold and italics for TODO and similar special words
     hi Todo guibg=#ffd700 gui=italic
     " 'gutter' used by LSP
@@ -283,6 +274,9 @@ endif
 "
 " Miscellaneous
 "
+
+" Disable style overrides for Rust
+let g:rust_recommended_style=0
 
 " Use semi-persistent history.
 call mkdir("/tmp/nvim-1000/undo", "p", 0700)
@@ -342,8 +336,9 @@ set smartindent
 " Every wrapped line will continue visually indented (same amount of space as
 " the beginning of that line)
 set breakindent
-" Place case labels at the indent level of the switch statement
-set cino=:0
+" Place case labels at the indent level of the switch statement, and fix
+" multiline parenthesis indentation.
+set cino+=:0,m1,(4
 
 " When 'confirm' is on, certain operations that would normally fail because of
 " unsaved changes to a buffer, e.g. ":q" and ":e", instead raise a dialog asking
@@ -358,6 +353,8 @@ set clipboard=unnamedplus
 " Only xterm can grab the mouse events when using the shift key, for other
 " terminals use ":", select text and press Esc.
 set mouse=a
+" Disable right click menu
+set mousemodel=extend
 
 " When editing a file, always jump to the last known cursor position and centre
 " the line.  Don't do it when the position is invalid, when inside an event
